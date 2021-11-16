@@ -1,0 +1,576 @@
+/* HTML */
+
+html {
+    font-family: 'Montserrat', sans-serif;
+}
+
+:root {
+    --blue: #287bff;
+    --purple: #5038EC;
+    --gray: #f5f5f5;
+    --gray2: #C3BFCC;
+    --black: #999;
+}
+
+
+/* CONTAINER */
+
+body {
+    display: grid;
+    grid-template-columns: 300px auto;
+    width: 100vh;
+    height: 100vh;
+}
+
+.containerBar {
+    background: var(--blue);
+    min-height: 100%;
+}
+
+.containerBar ul {
+    position: absolute;
+    top: 0;
+    left: -20px;
+    width: 300px;
+    height: 98%;
+}
+
+.containerBar ul li {
+    position: relative;
+    width: 100%;
+    list-style: none;
+    border-top-left-radius: 1.875em;
+    border-bottom-left-radius: 1.875em;
+}
+
+.containerBar ul li:hover,
+.containerBar ul li.hovered {
+    background: white;
+}
+
+.containerBar ul li:first-child {
+    margin-bottom: 2.5em;
+    pointer-events: none;
+}
+
+.containerBar ul li:last-child {
+    position: absolute;
+    bottom: 3em;
+}
+
+.containerBar ul li a {
+    position: relative;
+    display: flex;
+    width: 100%;
+    text-decoration: none;
+    color: white;
+}
+
+.containerBar ul li:hover a,
+.containerBar ul li.hovered a {
+    color: var(--blue);
+}
+
+.containerBar ul li a .icon {
+    position: relative;
+    display: block;
+    min-width: 3.75em;
+    height: 3.75em;
+    line-height: 4.375em;
+    text-align: center;
+}
+
+ion-icon {
+    font-size: 1.75em;
+}
+
+.title {
+    position: relative;
+    display: block;
+    padding: 0 0.625em;
+    height: 60px;
+    font-weight: 300;
+    line-height: 60px;
+    text-align: start;
+    white-space: nowrap;
+}
+
+.title-h1 {
+    font-weight: bold;
+    font-size: 1.15em;
+}
+
+.logo span {
+    margin-top: 1em;
+}
+
+hr {
+    width: 250px;
+    margin-left: -0.05em;
+}
+
+
+/* Curva por fuera */
+
+.containerBar ul li:hover a::before,
+.containerBar ul li.hovered a::before {
+    content: '';
+    position: absolute;
+    right: 1.25em;
+    top: -3.05em;
+    width: 3.125em;
+    height: 3.125em;
+    background: transparent;
+    border-radius: 50%;
+    box-shadow: 2.188em 2.188em 0 1.25em white;
+    pointer-events: none;
+}
+
+.containerBar ul li:hover a::after,
+.containerBar ul li.hovered a::after {
+    content: '';
+    position: absolute;
+    right: 1.05em;
+    bottom: -3.125em;
+    width: 3.125em;
+    height: 3.125em;
+    background: transparent;
+    border-radius: 50%;
+    box-shadow: 2.188em -2.188em 0 1.25em white;
+    pointer-events: none;
+}
+
+
+/* main */
+
+.contentContenedores {
+    position: relative;
+    width: calc(100% - 300px);
+    left: 300px;
+    height: 100vh;
+}
+
+.main {
+    position: absolute;
+    width: calc(100% - 300px);
+    left: 300px;
+    height: 100vh;
+    background-color: white;
+    z-index: 1;
+    transition: .5s ease;
+}
+
+.main.active {
+    width: calc(100% - 80px);
+    left: 80px;
+}
+
+.main.presente {
+    z-index: 2;
+}
+
+.topbar {
+    width: 98%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5em 10px;
+}
+
+.toggle {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5em;
+    cursor: pointer;
+}
+
+
+/* .search {
+    position: relative;
+    width: 400px;
+    margin: 0 10px;
+} */
+
+.search a {
+    text-decoration: none;
+    color: var(--black);
+    text-align: center;
+}
+
+.search a:hover {
+    font-weight: bold;
+    font-size: 1.05em;
+}
+
+.search label {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.search label input {
+    width: 100%;
+    height: 40px;
+    border-radius: 40px;
+    padding: 5px 20px;
+    padding-left: 35px;
+    font-size: 18px;
+    outline: none;
+}
+
+.search label ion-icon {
+    position: relative;
+    top: 0;
+    right: 2em;
+    font-size: 1.2em;
+}
+
+.user {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.user img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cardBox {
+    position: relative;
+    top: 7.5%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 30px;
+}
+
+.cardBox .card {
+    position: relative;
+    background: white;
+    width: 80%;
+    padding: 30px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+}
+
+.cardBox .card .numbers {
+    position: relative;
+    font-weight: 500;
+    font-size: 2.5em;
+    color: var(--blue);
+}
+
+.cardBox .card .cardName {
+    color: var(--black);
+    font-size: 1.1em;
+    margin-top: 5px;
+}
+
+.cardBox .card .iconBx {
+    font-size: 2em;
+    color: var(--black);
+}
+
+.cardBox .card:hover {
+    background: var(--blue);
+}
+
+.cardBox .card:hover .numbers,
+.cardBox .card:hover .cardName,
+.cardBox .card:hover .iconBx {
+    color: white;
+}
+
+.details {
+    position: relative;
+    width: calc(100% - 50px);
+    top: 7.5%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 30px;
+    /* margin-top: 10px; */
+}
+
+.details .recentOrders {
+    position: relative;
+    display: grid;
+    min-height: 70%;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.cardHeader h2 {
+    font-weight: 600;
+    color: var(--blue);
+}
+
+.btn {
+    position: relative;
+    padding: 5px 10px;
+    background: var(--blue);
+    text-decoration: none;
+    color: white;
+    border-radius: 6px;
+}
+
+.details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.details table thead td {
+    font-weight: 600;
+}
+
+.details .recentOrders table tr {
+    color: #222;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.01);
+}
+
+.details .recentOrders table tr:last-child {
+    border-bottom: none;
+}
+
+.details .recentOrders table tbody tr:hover {
+    background: var(--blue);
+    color: white;
+}
+
+.details .recentOrders table tr td {
+    padding: 10px;
+}
+
+.details .recentOrders table tr td:last-child {
+    text-align: end;
+}
+
+.details .recentOrders table tr td:nth-child(2) {
+    text-align: end;
+}
+
+.details .recentOrders table tr td:nth-child(3) {
+    text-align: center;
+}
+
+.status.delivered {
+    padding: 2px 4px;
+    background: #8de02c;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status.pending {
+    padding: 2px 4px;
+    background: #f9ca3f;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status.return {
+    padding: 2px 4px;
+    background: #f00;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status.progress {
+    padding: 2px 4px;
+    background: #1795ce;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.recentCustomers {
+    position: relative;
+    display: grid;
+    min-height: 30%;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+}
+
+.recentCustomers .imgBx {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.recentCustomers .imgBx img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recentCustomers table tr:hover {
+    background: var(--blue);
+    color: white;
+}
+
+.recentCustomers table tr td {
+    padding: 12px 10px;
+}
+
+.recentCustomers table tr td h4 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2em;
+}
+
+.recentCustomers table tr td h4 span {
+    font-size: 14px;
+    color: var(--black);
+}
+
+.recentCustomers table tr:hover {
+    background: var(--blue);
+    color: white;
+}
+
+.recentCustomers table tr:hover td h4 span {
+    color: white;
+}
+
+@media(max-width: 991px) {
+    .containerBar {
+        left: -300px;
+    }
+    .containerBar.active {
+        width: 300px;
+        left: 0;
+    }
+    .main {
+        width: 100%;
+        left: 0;
+    }
+    .main.active {
+        left: 300px;
+    }
+    .cardBox {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 768px) {
+    .details {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .recentOrders {
+        overflow-x: auto;
+    }
+    .status.progress {
+        white-space: nowrap;
+    }
+}
+
+@media(max-width: 480px) {
+    .cardBox {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .cardHeader h2 {
+        font-size: 20px;
+    }
+    .user {
+        min-width: 40px;
+    }
+    .containerBar {
+        width: 100%;
+        left: -100%;
+        z-index: 1000;
+    }
+    .containerBar.active {
+        width: 100%;
+        left: 0;
+    }
+    .toggle {
+        z-index: 10001;
+    }
+    .main.active .toggle {
+        position: fixed;
+        right: 0;
+        left: initial;
+        color: white;
+    }
+}
+
+
+/* MENU CONTRASEÑA */
+
+.contentMain {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: white;
+}
+
+.contentMain h2 {
+    text-align: center;
+}
+
+.card {
+    margin-top: -5rem;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 3em 2em;
+    width: 25rem;
+    border-radius: 2.5%;
+}
+
+.contentMain form input {
+    margin-bottom: .5em;
+}
+
+.contentMain form button,
+#btnNewCustomer {
+    background: var(--blue);
+    border: none;
+    color: white;
+    padding: .8em;
+    border-radius: 16px;
+    margin-top: 1em;
+    cursor: pointer;
+}
+
+#btnNewCustomer {
+    margin-left: 1em;
+}

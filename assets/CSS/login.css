@@ -1,0 +1,153 @@
+/* HTML */
+html{
+  font-family: 'Montserrat', sans-serif;
+}
+:root{
+  --purple: #5038EC;
+  --gray: #C3BFCC;
+}
+
+/* Containers */
+.containerLogin{
+  display: grid;
+  grid-template-columns: 50% 50%;
+  width: 100%;
+  height: 100%;
+}
+.containerDesign{
+  background-color: var(--purple);
+  height: 100vh;
+}
+.containerInput{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20rem;
+  margin: auto;
+}
+
+/* Container Form */
+
+form{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+input{
+  padding: .8em;
+  border-radius: .8em;
+  border: transparent;
+  background-color: #f1eff1;
+}
+input:focus{
+  outline: none;
+  border-left: 3px solid var(--purple);
+  font-weight: 300;
+}
+label{
+  font-weight: bold;
+  margin: 1em 0;
+}
+.contentPassword{
+  display: flex;
+  justify-content: end;
+  margin: 2em 0;
+}
+.contentPassword a{
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--purple)
+}
+.contentHeader{
+  position: absolute;
+  top: 17.5%;
+  width: 20rem;
+}
+.contentHeader p a{
+  text-decoration: none;
+  color: var(--purple);
+  font-weight: bold;
+}
+.btnLogin{
+  padding: .8em;
+  color: white;
+  border: transparent;
+  background-color: var(--purple);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 2.5rem;
+}
+footer{
+  position: absolute;
+  bottom: 10%;
+  color: var(--gray);
+}
+/* Container Design */
+
+.top_left{
+  position: absolute;
+}
+.bottom_right{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.design_points{
+  position: absolute;
+  bottom: 20%;
+  right: 30%;
+}
+.design_center{
+  position: absolute;
+  right: 5%;
+  top: 15%;
+}
+.design_circle{
+  position: absolute;
+  right: 2.5%;
+  top: 40%;
+}
+.cardTop, .cardBottom{
+  background-color: white;
+  position: absolute;
+  border-radius: .25rem;
+}
+.cardTop{
+  width: 15.625rem;
+  height: 18.75rem;
+  top: 20%;
+  right: 12.5%;
+  z-index: 1;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
+}
+.cardBottom{
+  width: 21.875rem;
+  height: 15.625rem;
+  top: 40%;
+  right: 20%;
+}
+.circle{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  position: absolute;
+  width: 3.5em;
+  height: 3.5em;
+  border-radius: 50%;
+  background-color: white;
+}
+.circlePig{
+  top: 5%;
+  right: 27.5%;
+}
+.circleShop{
+  bottom: 25%;
+  right: 7.5%;
+}
+.circleSecurity{
+  width: 4.5em;
+  height: 4.5em;
+  top: 22.5%;
+  right: 35%;
+}
