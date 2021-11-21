@@ -1,5 +1,5 @@
 ﻿<?php
-
+    require './pages/conexion.php';
     session_start();
     if(isset($_SESSION['nombre'])){
         $nombrePOST = $_SESSION['nombre'];
@@ -135,7 +135,31 @@
                 <div class="contentNovedades">
                     <h2>Novedades</h2>
                     <div class="contentCardNovedades">
-                        <div class="cardProduct">
+                        <?php
+                            $sentence = "SELECT c.nombre nombreProducto, c.precio, d.nombre nombreFamilia, c.nombreImagen FROM productos c INNER JOIN familias d ON c.id = d.id LIMIT 0,6;";
+                            $rpta = $mysqli->query($sentence);
+                            foreach($rpta as $row){
+                                echo "<div class='cardProduct'><span class='span'>New</span>";
+                                echo "<div class='contentRopa'>";
+                                echo "<img src='assets/Resources/img/".$row['nombreImagen']."' alt='Producto'/></div>";
+                                echo "<div class='contentRopaText'>";
+                                echo "<span class='category'>".strtoupper($row['nombreFamilia'])."</span>";
+                                echo "<h3>".$row['nombreProducto']."</h3>";
+                                echo "<span class='price'>s/ ".$row['precio']."</span></div></div>";
+                            } 
+                        ?>
+                        <!-- <div class="cardProduct">
+                            <span class="span">New</span>
+                            <div class="contentRopa">
+                                <img src="assets/Resources/img/product.png" alt="Camisa" />
+                            </div>
+                            <div class="contentRopaText">
+                                <span class="category">CAMISAS</span>
+                                <h3>Camisa Manga corta</h3>
+                                <span class="price">s/ 34</span>
+                            </div>
+                        </div> -->
+                        <!-- <div class="cardProduct">
                             <span class="span">New</span>
                             <div class="contentRopa">
                                 <img src="assets/Resources/img/product.png" alt="Camisa" />
@@ -189,18 +213,7 @@
                                 <h3>Camisa Manga corta</h3>
                                 <span class="price">s/ 34</span>
                             </div>
-                        </div>
-                        <div class="cardProduct">
-                            <span class="span">New</span>
-                            <div class="contentRopa">
-                                <img src="assets/Resources/img/product.png" alt="Camisa" />
-                            </div>
-                            <div class="contentRopaText">
-                                <span class="category">CAMISAS</span>
-                                <h3>Camisa Manga corta</h3>
-                                <span class="price">s/ 34</span>
-                            </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

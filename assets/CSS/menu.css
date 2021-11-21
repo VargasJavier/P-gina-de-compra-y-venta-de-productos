@@ -345,7 +345,8 @@ hr {
     margin-top: 10px;
 }
 
-.details table thead td {
+.details table thead td,
+.details table tfoot td {
     font-weight: 600;
 }
 
@@ -381,7 +382,7 @@ hr {
 
 .status.delivered {
     padding: 2px 4px;
-    background: #8de02c;
+    background: #78c223;
     color: white;
     border-radius: 4px;
     font-size: 14px;
@@ -390,7 +391,7 @@ hr {
 
 .status.pending {
     padding: 2px 4px;
-    background: #f9ca3f;
+    background: #f5c32d;
     color: white;
     border-radius: 4px;
     font-size: 14px;
@@ -540,7 +541,7 @@ hr {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 90%;
     background: white;
 }
 
@@ -572,5 +573,13 @@ hr {
 }
 
 #btnNewCustomer {
-    margin-left: 1em;
+    margin-left: 1.5em;
 }
+
+.contentClientes .details .recentOrders {
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+/* Add Customer & Sales */

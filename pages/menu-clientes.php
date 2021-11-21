@@ -104,42 +104,46 @@
                     <button id="btnNewCustomer" type="button">Registrar cliente</button>
 
                 </div>
-                <table>
-                    <theader>
-                        <tr>
-                            <td>ID</td>
-                            <td>Nombre</td>
-                            <td>Teléfono</td>
-                            <td>N° Compras</td>
-                        </tr>
-                    </theader>
-                    <tbody>
-                    <?php
-                            $sql = "SELECT id_cliente, nombre, telefono FROM cliente;";
-                            $contador = 1;
-                            $resultado = $mysqli->query($sql);
-                            foreach($resultado as $row){
-                                $sql1 = "SELECT count(*) FROM cliente WHERE id_cliente = ".$contador;
-                                $result = $mysqli->query($sql1);
-                                echo "<tr>";
-                                echo "<td>".$row['id_cliente']."</td>";
-                                echo "<td>".$row['nombre']."</td>";
-                                echo "<td>".$row['telefono']."</td>";
-                                $nCompras = $result->fetch_array()[0] ?? 0;
-                                echo "<td>".$nCompras."</td>";
-                                $contador++;
-                            } echo "</tr>";
-                        ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>ID</td>
-                            <td>Nombre</td>
-                            <td>Teléfono</td>
-                            <td>N° Compras</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="details">
+                    <div class="recentOrders">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>Nombre</td>
+                                    <td>Dirección</td>
+                                    <td>Teléfono</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            //SELECT c.id_cliente,nombre, COUNT(*) as c_compras FROM cliente c INNER JOIN venta d ON c.id_cliente = d.id_cliente GROUP BY c.id_cliente ORDER BY c_compras DESC;
+                                    $sql = "SELECT c.id, c.nombres,c.direccion, d.telefono FROM clientes c INNER JOIN telefonos d ON c.id = d.idCliente_fk;";
+                                    $resultado = $mysqli->query($sql);
+                                    $nombres = "Hola";
+                                    foreach($resultado as $row){
+                                        if($row['id'] == $nombres) continue;
+                                        echo "<tr>";
+                                        echo "<td>".$row['id']."</td>";
+                                        echo "<td>".$row['nombres']."</td>";
+                                        echo "<td>".$row['direccion']."</td>";
+                                        echo "<td>".$row['telefono']."</td>";
+                                        $nombres = $row['id'];
+                                    } echo "</tr>";
+
+                                ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>Nombre</td>
+                                    <td>Teléfono</td>
+                                    <td>N° Compras</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
             </div>
   </div>
 </body>

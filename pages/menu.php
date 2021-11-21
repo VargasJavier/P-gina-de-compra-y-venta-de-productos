@@ -102,7 +102,7 @@
                     <div>
                         <div class="numbers">
                             <?php
-                                $sql = "SELECT count(*) FROM producto;";
+                                $sql = "SELECT count(*) FROM productos;";
                                 $resultado = $mysqli->query($sql);
                                 echo $resultado->fetch_array()[0] ?? 'Hola';
                             ?>
@@ -117,7 +117,7 @@
                     <div>
                         <div class="numbers">
                             <?php
-                                $sql = "SELECT count(*) FROM venta;";
+                                $sql = "SELECT count(*) FROM ventas;";
                                 $resultado = $mysqli->query($sql);
                                 echo $resultado->fetch_array()[0] ?? 'Hola';
                             ?>
@@ -132,7 +132,7 @@
                     <div>
                         <div class="numbers">
                             <?php
-                                $sql = "SELECT count(*) FROM familia;";
+                                $sql = "SELECT count(*) FROM familias;";
                                 $resultado = $mysqli->query($sql);
                                 echo $resultado->fetch_array()[0] ?? 'Hola';
                             ?>
@@ -147,8 +147,8 @@
                     <div>
                         <div class="numbers">
                             <?php
-                                $sql1 = "SELECT SUM(precioVenta) FROM venta";
-                                $sql2 = "SELECT SUM(precioCompra) FROM venta";
+                                $sql1 = "SELECT SUM(total) FROM ventas";
+                                $sql2 = "SELECT SUM(total) FROM ventas";
                                 $resultadoVenta = $mysqli->query($sql1);
                                 $resultadoCompra = $mysqli->query($sql2);
                                 $ganancias = $resultadoVenta->fetch_array()[0] ?? 0;
@@ -169,7 +169,7 @@
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Ventas Recientes</h2>
+                        <h2>Productos Recientes</h2>
                         <a class="btn">View All</a>
                     </div>
                     <table>
@@ -177,35 +177,26 @@
                             <tr>
                                 <td>Nombre</td>
                                 <td>Precio</td>
-                                <td>Método de pago</td>
+                                <td>Cantidad</td>
                                 <td>Fecha</td>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status delivered">Delivered</span></td>
-                            </tr>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status progress">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status pending">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status return">Return</span></td>
-                            </tr>
+                            <?php
+                                $arrayStatus = array("delivered","pending","return","progress");
+                                $cantidad = 0;
+                                $sentence = "SELECT c.nombre nombreProducto, c.cantidad, c.precio, d.nombre nombreFamilia FROM productos c INNER JOIN familias d ON c.id = d.id;";
+                                $rpta = $mysqli->query($sentence);
+                                foreach($rpta as $row){
+                                    echo "<tr>";
+                                    echo "<td>".$row['nombreProducto']."</td>";
+                                    echo "<td>$".$row['precio']."</td>";
+                                    echo "<td>".$row['cantidad']."</td>";
+                                    echo "<td><span class='status ".$arrayStatus[$cantidad]."'>".$row['nombreFamilia']."</span></td>";
+                                    echo "</tr>";
+                                    if($cantidad == 3) $cantidad = 0; else $cantidad++;
+                                } 
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -221,10 +212,10 @@
                     </div>
                     <table>
                         <?php
-                            $sql = "SELECT id_usuario, nombres FROM usuario;";
+                            $sql = "SELECT id, nombres FROM usuarios;";
                             $resultado = $mysqli->query($sql);
                             foreach($resultado as $row){
-                                echo "<tr><td width='60px'><div class='imgBx'><img src='../assets/Resources/img/image_listview.jpg' alt='Foto de usuarios'></div></td><td><h4>".$row['nombres']."<br><span>".$row['id_usuario']."</span></h4></td></tr>";
+                                echo "<tr><td width='60px'><div class='imgBx'><img src='../assets/Resources/img/image_listview.jpg' alt='Foto de usuarios'></div></td><td><h4>".$row['nombres']."<br><span>".$row['id']."</span></h4></td></tr>";
                             }
                         ?>
                         <!-- <tr>

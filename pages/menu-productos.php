@@ -1,4 +1,5 @@
 <?php
+    require 'conexion.php';
     session_start();
     if(!isset($_SESSION['nombre'])){
         header("Location: ../index.php");
@@ -89,135 +90,94 @@
                     </div>
                 </div>
             </div>
+            <div class="contentClientes">
+                <div class="contentButtonCustomer">
+                    <button id="btnNewCustomer" type="button">Registrar producto</button>
 
-            <div class="cardBox">
-                <div class="card">
-                    <div>
-                        <div class="numbers">1.504</div>
-                        <div class="cardName">Productos</div>
-                    </div>
-                    <div class="iconBx">
-                        <ion-icon name="eye"></ion-icon>
-                    </div>
                 </div>
-                <div class="card">
-                    <div>
-                        <div class="numbers">80</div>
-                        <div class="cardName">Ventas</div>
-                    </div>
-                    <div class="iconBx">
-                        <ion-icon name="cart"></ion-icon>
-                    </div>
-                </div>
-                <div class="card">
-                    <div>
-                        <div class="numbers">284</div>
-                        <div class="cardName">Familias</div>
-                    </div>
-                    <div class="iconBx">
-                        <ion-icon name="copy"></ion-icon>
-                    </div>
-                </div>
-                <div class="card">
-                    <div>
-                        <div class="numbers">$7.842</div>
-                        <div class="cardName">Ganancias</div>
-                    </div>
-                    <div class="iconBx">
-                        <ion-icon name="podium"></ion-icon>
-                    </div>
-                </div>
-            </div>
+                <div class="details">
+                    <div class="recentOrders">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Nombre</td>
+                                    <td>Cantidad</td>
+                                    <td>Precio</td>
+                                    <td>Familia</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                                    $sql = "SELECT c.nombre nombreProducto, c.cantidad, c.precio, d.nombre nombres FROM productos c INNER JOIN familias d ON c.idFamilia_fk = d.id;";
+                                    $resultado = $mysqli->query($sql);
+                                    foreach($resultado as $row){
+                                        echo "<tr>";
+                                        echo "<td>".$row['nombreProducto']."</td>";
+                                        echo "<td>".$row['cantidad']."</td>";
+                                        echo "<td>$".$row['precio']."</td>";
+                                        echo "<td>".$row['nombres']."</td>";
+                                    } echo "</tr>";
 
-            <!-- details list -->
-            <div class="details">
-                <div class="recentOrders">
-                    <div class="cardHeader">
-                        <h2>Ventas Recientes</h2>
-                        <a class="btn">View All</a>
+                                ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>Nombre</td>
+                                    <td>Cantidad</td>
+                                    <td>Precio</td>
+                                    <td>Familia</td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Nombre</td>
-                                <td>Precio</td>
-                                <td>Método de pago</td>
-                                <td>Fecha</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status delivered">Delivered</span></td>
-                            </tr>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status progress">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status pending">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status return">Return</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
-                <!-- New Customers -->
+
                 <?php
+                    if(isset($_POST['registrarProducto'])){
+                        echo $_POST['select'];
+                        if(isset($_FILES['foto']['name']) && $_POST['select'] != 0){
+                            echo "Prueba";
+                            $nombreProducto = $_POST['txtNombre']; 
+                            $precioProducto = $_POST['txtPrecio']; 
+                            $familiaProducto = $_POST['select']; 
+                            $tipoArchivo = $_FILES['foto']['type']; 
+                            $nombreArchivo = $_FILES['foto']['name']; 
+                            $tamanoArchivo = $_FILES['foto']['size']; 
+                            $imagenSubida = fopen($_FILES['foto']['tmp_name'],'r');
+                            $binariosImagen = fread($imagenSubida,$tamanoArchivo);
+                            $binariosImagen = mysql_escape_string($mysqli,$binariosImagen);
+                            $sql = "INSERT INTO `productos` (`nombre`, `cantidad`, `precio`,`imagen`, `tipoImagen`, `nombreImagen`, `idFamilia_fk`) VALUES ( $nombreProducto,0,$precioProducto,$binariosImagen,$tipoArchivo,$nombreArchivo,$familiaProducto);";
+                            $resultado = $mysqli->query($sql);
+                            if($resultado)
+                                echo "Registro exitoso";
+                            else
+                                echo "Error en el registro";
+                        }else{
+                            echo "Error al registrar. Vuelve a intentarlo";
+                        }
+                    }
+                ?>
 
-                    if($_SESSION['tipo'] == 1)
-                        echo '<div class="recentCustomers" style="visibility: hidden;">';
-                    else
-                        echo '<div class="recentCustomers">';?>
-                    <div class="cardHeader">
-                        <h2>Clientes recientes</h2>
-                    </div>
-                    <table>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="../assets/Resources/slider-images/img2-2.jpg" alt="Foto de usuarios"></div>
-                            </td>
-                            <td>
-                                <h4>David<br><span>Italy</span></h4>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="../assets/Resources/slider-images/img2-2.jpg" alt="Foto de usuarios"></div>
-                            </td>
-                            <td>
-                                <h4>David<br><span>Italy</span></h4>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="../assets/Resources/slider-images/img2-2.jpg" alt="Foto de usuarios"></div>
-                            </td>
-                            <td>
-                                <h4>David<br><span>Italy</span></h4>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="../assets/Resources/slider-images/img2-2.jpg" alt="Foto de usuarios"></div>
-                            </td>
-                            <td>
-                                
-                                <h4>David<br><span>Italy</span></h4>
-                            </td>
-                        </tr>
-                    </table>
+                <div class="addCustomer">
+                    <form action="menu-productos.php" method="post">
+                        <label for="">Nombre:</label><br>
+                        <input type="text" name="txtNombre" id=""><br>
+                        <label for="">Precio:</label><br>
+                        <input type="text" name="txtPrecio" id=""><br>
+                        <label for="">Imagen:</label>
+                        <input type="file" name="foto" id=""><br>
+                        <select name="select">
+                            <?php
+                                $sql = "SELECT id, nombre FROM familias;";
+                                $resultado = $mysqli->query($sql);
+                                echo "<option value='0'>Seleccionar familia</option>";
+                                foreach($resultado as $row){
+                                    echo "<option value='".$row['id']."'>".$row['nombre']."</option>";
+                                } 
+                            ?>
+                        </select>
+                        <button id="btnNewCustomer" name="registrarProducto" type="submit">Registrar</button>
+                    </form>
                 </div>
             </div>
   </div>
