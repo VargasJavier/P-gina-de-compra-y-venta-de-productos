@@ -1,4 +1,5 @@
 <?php
+    require 'conexion.php';
     session_start();
     if(!isset($_SESSION['nombre'])){
         header("Location: ../index.php");
@@ -89,7 +90,45 @@
                 </div>
             </div>
 
-            
+            <div class="addShopping">
+                <div class="card">
+                    <?php
+                        if(isset($_POST['registrarProducto'])){
+                            if($_POST['select'] != 0){
+                                $sql = "INSERT INTO `productos` (`nombre`, `cantidad`, `precio`,`imagen`, `tipoImagen`, `nombreImagen`, `idFamilia_fk`) VALUES ( '$nombreProducto',0,'$precioProducto','$binariosImagen','$tipoArchivo','$nombreArchivo','$familiaProducto');";
+                                $resultado = $mysqli->query($sql);
+                                if($resultado)
+                                    echo "Registro exitoso";
+                                else
+                                    echo "Error en el registro";
+                            }else{
+                                echo "Error al registrar. Vuelve a intentarlo";
+                            }
+                        }
+                    ?>
+                    <form action="menu-productos.php" method="post" enctype="multipart/form-data">
+                        <h1>Registrar compra</h1>
+                        <label for="">Método de pago:</label>
+                        <select name="selectPago">
+                            <option value="0">Seleccionar...</option>
+                            <option>Efectivo</option>
+                            <option>Tarjeta</option>
+                        </select><br>
+                        <label for="">Proveedor:</label>
+                        <select name="selectProveedor">
+                            <?php
+                                echo "<option value='0'>Seleccionar...</option>";
+                                $sql = "SELECT id, nombre FROM proveedores;";
+                                $resultado = $mysqli->query($sql);
+                                foreach($resultado as $row){
+                                    echo "<option value='".$row['id']."'>".$row['nombre']."</option>";
+                                } 
+                            ?>
+                        </select><br>
+                        <button id="btnNewCustomer" name="registrarProducto" type="submit">Siguiente</button>
+                    </form>
+                </div>
+            </div>
   </div>
 </body>
 

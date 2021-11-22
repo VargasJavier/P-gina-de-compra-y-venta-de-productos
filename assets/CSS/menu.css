@@ -583,3 +583,13 @@ hr {
 
 
 /* Add Customer & Sales */
+
+.addShopping {
+    padding-top: -5em;
+    width: 100%;
+    height: calc(100% - 5em);
+    /* height: 100%; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

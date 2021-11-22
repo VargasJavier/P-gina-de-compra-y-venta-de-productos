@@ -136,84 +136,18 @@
                     <h2>Novedades</h2>
                     <div class="contentCardNovedades">
                         <?php
-                            $sentence = "SELECT c.nombre nombreProducto, c.precio, d.nombre nombreFamilia, c.nombreImagen FROM productos c INNER JOIN familias d ON c.id = d.id LIMIT 0,6;";
+                            $sentence = "SELECT c.nombre nombreProducto, c.precio, d.nombre nombreFamilia, c.imagen, c.tipoImagen FROM productos c INNER JOIN familias d ON c.idFamilia_fk = d.id LIMIT 0,6;";
                             $rpta = $mysqli->query($sentence);
                             foreach($rpta as $row){
                                 echo "<div class='cardProduct'><span class='span'>New</span>";
                                 echo "<div class='contentRopa'>";
-                                echo "<img src='assets/Resources/img/".$row['nombreImagen']."' alt='Producto'/></div>";
+                                echo "<img src='data:".$row['tipoImagen'].";base64, ".base64_encode($row['imagen'])."' alt='Imagen del producto ".$row['nombreProducto']."'/></div>";
                                 echo "<div class='contentRopaText'>";
                                 echo "<span class='category'>".strtoupper($row['nombreFamilia'])."</span>";
                                 echo "<h3>".$row['nombreProducto']."</h3>";
                                 echo "<span class='price'>s/ ".$row['precio']."</span></div></div>";
                             } 
                         ?>
-                        <!-- <div class="cardProduct">
-                            <span class="span">New</span>
-                            <div class="contentRopa">
-                                <img src="assets/Resources/img/product.png" alt="Camisa" />
-                            </div>
-                            <div class="contentRopaText">
-                                <span class="category">CAMISAS</span>
-                                <h3>Camisa Manga corta</h3>
-                                <span class="price">s/ 34</span>
-                            </div>
-                        </div> -->
-                        <!-- <div class="cardProduct">
-                            <span class="span">New</span>
-                            <div class="contentRopa">
-                                <img src="assets/Resources/img/product.png" alt="Camisa" />
-                            </div>
-                            <div class="contentRopaText">
-                                <span class="category">CAMISAS</span>
-                                <h3>Camisa Manga corta</h3>
-                                <span class="price">s/ 34</span>
-                            </div>
-                        </div>
-                        <div class="cardProduct">
-                            <span class="span">New</span>
-                            <div class="contentRopa">
-                                <img src="assets/Resources/img/product.png" alt="Camisa" />
-                            </div>
-                            <div class="contentRopaText">
-                                <span class="category">CAMISAS</span>
-                                <h3>Camisa Manga corta</h3>
-                                <span class="price">s/ 34</span>
-                            </div>
-                        </div>
-                        <div class="cardProduct">
-                            <span class="span">New</span>
-                            <div class="contentRopa">
-                                <img src="assets/Resources/img/product.png" alt="Camisa" />
-                            </div>
-                            <div class="contentRopaText">
-                                <span class="category">CAMISAS</span>
-                                <h3>Camisa Manga corta</h3>
-                                <span class="price">s/ 34</span>
-                            </div>
-                        </div>
-                        <div class="cardProduct">
-                            <span class="span">New</span>
-                            <div class="contentRopa">
-                                <img src="assets/Resources/img/product.png" alt="Camisa" />
-                            </div>
-                            <div class="contentRopaText">
-                                <span class="category">CAMISAS</span>
-                                <h3>Camisa Manga corta</h3>
-                                <span class="price">s/ 34</span>
-                            </div>
-                        </div>
-                        <div class="cardProduct">
-                            <span class="span">New</span>
-                            <div class="contentRopa">
-                                <img src="assets/Resources/img/product.png" alt="Camisa" />
-                            </div>
-                            <div class="contentRopaText">
-                                <span class="category">CAMISAS</span>
-                                <h3>Camisa Manga corta</h3>
-                                <span class="price">s/ 34</span>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>

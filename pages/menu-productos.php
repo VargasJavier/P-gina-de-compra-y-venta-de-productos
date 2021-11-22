@@ -132,34 +132,28 @@
                     </div>
                 </div>
 
-                <?php
-                    if(isset($_POST['registrarProducto'])){
-                        echo $_POST['select'];
-                        if(isset($_FILES['foto']['name']) && $_POST['select'] != 0){
-                            echo "Prueba";
-                            $nombreProducto = $_POST['txtNombre']; 
-                            $precioProducto = $_POST['txtPrecio']; 
-                            $familiaProducto = $_POST['select']; 
-                            $tipoArchivo = $_FILES['foto']['type']; 
-                            $nombreArchivo = $_FILES['foto']['name']; 
-                            $tamanoArchivo = $_FILES['foto']['size']; 
-                            $imagenSubida = fopen($_FILES['foto']['tmp_name'],'r');
-                            $binariosImagen = fread($imagenSubida,$tamanoArchivo);
-                            $binariosImagen = mysql_escape_string($mysqli,$binariosImagen);
-                            $sql = "INSERT INTO `productos` (`nombre`, `cantidad`, `precio`,`imagen`, `tipoImagen`, `nombreImagen`, `idFamilia_fk`) VALUES ( $nombreProducto,0,$precioProducto,$binariosImagen,$tipoArchivo,$nombreArchivo,$familiaProducto);";
-                            $resultado = $mysqli->query($sql);
-                            if($resultado)
-                                echo "Registro exitoso";
-                            else
-                                echo "Error en el registro";
-                        }else{
-                            echo "Error al registrar. Vuelve a intentarlo";
-                        }
-                    }
-                ?>
-
                 <div class="addCustomer">
-                    <form action="menu-productos.php" method="post">
+                    <?php
+                        if(isset($_POST['registrarProducto'])){
+                            if($_POST['select'] != 0){
+                                $nombreProducto = $_POST['txtNombre']; 
+                                $precioProducto = $_POST['txtPrecio']; 
+                                $familiaProducto = $_POST['select']; 
+                                $binariosImagen = addslashes(file_get_contents($_FILES['foto']['tmp_name']));
+                                $tipoArchivo = $_FILES['foto']['type']; 
+                                $nombreArchivo = $_FILES['foto']['name'];
+                                $sql = "INSERT INTO `productos` (`nombre`, `cantidad`, `precio`,`imagen`, `tipoImagen`, `nombreImagen`, `idFamilia_fk`) VALUES ( '$nombreProducto',0,'$precioProducto','$binariosImagen','$tipoArchivo','$nombreArchivo','$familiaProducto');";
+                                $resultado = $mysqli->query($sql);
+                                if($resultado)
+                                    echo "Registro exitoso";
+                                else
+                                    echo "Error en el registro";
+                            }else{
+                                echo "Error al registrar. Vuelve a intentarlo";
+                            }
+                        }
+                    ?>
+                    <form action="menu-productos.php" method="post" enctype="multipart/form-data">
                         <label for="">Nombre:</label><br>
                         <input type="text" name="txtNombre" id=""><br>
                         <label for="">Precio:</label><br>

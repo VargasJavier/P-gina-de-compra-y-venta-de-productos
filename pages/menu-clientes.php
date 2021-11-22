@@ -117,21 +117,18 @@
                             </thead>
                             <tbody>
                             <?php
-                            //SELECT c.id_cliente,nombre, COUNT(*) as c_compras FROM cliente c INNER JOIN venta d ON c.id_cliente = d.id_cliente GROUP BY c.id_cliente ORDER BY c_compras DESC;
-                                    $sql = "SELECT c.id, c.nombres,c.direccion, d.telefono FROM clientes c INNER JOIN telefonos d ON c.id = d.idCliente_fk;";
-                                    $resultado = $mysqli->query($sql);
-                                    $nombres = "Hola";
-                                    foreach($resultado as $row){
-                                        if($row['id'] == $nombres) continue;
-                                        echo "<tr>";
-                                        echo "<td>".$row['id']."</td>";
-                                        echo "<td>".$row['nombres']."</td>";
-                                        echo "<td>".$row['direccion']."</td>";
-                                        echo "<td>".$row['telefono']."</td>";
-                                        $nombres = $row['id'];
-                                    } echo "</tr>";
-
-                                ?>
+                                $sql = "SELECT c.id, c.nombres,c.direccion, d.telefono FROM clientes c INNER JOIN telefonos d ON c.id = d.idCliente_fk;";
+                                $resultado = $mysqli->query($sql);
+                                foreach($resultado as $row){
+                                    if($row['id'] == $nombres) continue;
+                                    echo "<tr>";
+                                    echo "<td>".$row['id']."</td>";
+                                    echo "<td>".$row['nombres']."</td>";
+                                    echo "<td>".$row['direccion']."</td>";
+                                    echo "<td>".$row['telefono']."</td>";
+                                    $nombres = $row['id'];
+                                } echo "</tr>";
+                            ?>
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -143,6 +140,44 @@
                             </tfoot>
                         </table>
                     </div>
+                </div>
+                <div class="addCustomer">
+                    <?php
+                        if(isset($_POST['registrarCliente'])){
+                            $idCliente = $_POST['txtId'];
+                            $nombreCliente = $_POST['txtNombre'];
+                            $direccionCliente = $_POST['txtDireccion'];
+                            $telefonoCliente = $_POST['txtTelefono'];
+                            $redCliente = $_POST['txtRedSocial'];
+                            $idTelefono = $idCliente."_".$telefonoCliente;
+                            $idRed = $idCliente."_Facebook";
+                            $sql = "INSERT INTO clientes VALUES ('$idCliente','$nombreCliente','$direccionCliente');";
+                            $sql1 = "INSERT INTO telefonos VALUES ('$idTelefono','$telefonoCliente','$idCliente');";
+                            $sql2 = "INSERT INTO redessociales VALUES ('$idRed','Facebook','$redCliente','$idCliente');";
+                            $resultado = $mysqli->query($sql);
+                            $resultado1 = $mysqli->query($sql1);
+                            $resultado2 = $mysqli->query($sql2);
+                            if($resultado && $resultado1 && $resultado2)
+                                echo "Registro exitoso";
+                            else
+                                echo "Error en el registro";
+                        }else{
+                            echo "Error al registrar. Vuelve a intentarlo";
+                        }
+                    ?>
+                    <form action="menu-clientes.php" method="post">
+                        <label for="">Identificador:</label>
+                        <input type="text" name="txtId"><br>
+                        <label for="">Nombre:</label>
+                        <input type="text" name="txtNombre"><br>
+                        <label for="">Dirección:</label>
+                        <input type="text" name="txtDireccion"><br>
+                        <label for="">Teléfono:</label>
+                        <input type="text" name="txtTelefono"><br>
+                        <label for="">Red Social:</label>
+                        <input type="text" name="txtRedSocial"><br>
+                        <button id="btnNewCustomer" name="registrarCliente" type="submit">Registrar</button>
+                    </form>
                 </div>
             </div>
   </div>
