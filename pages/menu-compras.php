@@ -4,6 +4,8 @@
     if(!isset($_SESSION['nombre'])){
         header("Location: ../index.php");
     }
+    $idCompra = $_SESSION['id'];
+    $tipoCompra = $_SESSION['tipo'];
     $nombrePOST = $_SESSION['nombre'];
     $nombreArray = explode(" ",$nombrePOST);
     $nombres = $nombreArray[0]." ".$nombreArray[1];
@@ -89,9 +91,49 @@
                     </div>
                 </div>
             </div>
-
             <div class="addShopping">
-                <div class="card">
+                <div class="card addShoppingFirst">
+                    <?php
+                        if(isset($_POST['registrarCompra']) && $tipoCompra == 0){
+                            if($_POST['selectPago'] != 0 && $_POST['selectProveedor'] != 0){
+                                $pagoCompra = $_POST['selectPago'];
+                                $proveedorCompra = $_POST['selectProveedor'];
+                                $timeCompra = new DateTime();
+                                $fechaCompra = $timeCompra->format("Y-m-d h:i:s a");
+                                $sql = "INSERT INTO `compras` (`fecha`, `Total`, `idAdmin_fk`, `idProveedor_fk`, `metodoPago`) VALUES ('$fechaCompra', 0, '$idCompra', $proveedorCompra, '$pagoCompra')";
+                                $resultado = $mysqli->query($sql);
+                                if($resultado)
+                                    echo "Registro exitoso";
+                                else
+                                    echo "Error en el registro";
+                            }else{
+                                echo "Error al registrar. Vuelve a intentarlo";
+                            }
+                        }
+                    ?>
+                    <form enctype="multipart/form-data">
+                        <h1>Registrar compra</h1>
+                        <label for="">Método de pago:</label>
+                        <select required name="selectPago">
+                            <option value="0">Seleccionar...</option>
+                            <option>Efectivo</option>
+                            <option>Tarjeta</option>
+                        </select><br>
+                        <label for="">Proveedor:</label>
+                        <select required name="selectProveedor">
+                            <?php
+                                echo "<option value='0'>Seleccionar...</option>";
+                                $sql = "SELECT id, nombre FROM proveedores;";
+                                $resultado = $mysqli->query($sql);
+                                foreach($resultado as $row){
+                                    echo "<option value='".$row['id']."'>".$row['nombre']."</option>";
+                                } 
+                            ?>
+                        </select><br>
+                        <button onclick="pasarSiguiente" id="btnNewCustomer" type="submit" class="pasarSiguiente">Siguiente</button>
+                    </form>
+                </div>
+                <div class="card addShoppingSecond">
                     <?php
                         if(isset($_POST['registrarProducto'])){
                             if($_POST['select'] != 0){
@@ -106,26 +148,27 @@
                             }
                         }
                     ?>
-                    <form action="menu-productos.php" method="post" enctype="multipart/form-data">
-                        <h1>Registrar compra</h1>
-                        <label for="">Método de pago:</label>
-                        <select name="selectPago">
-                            <option value="0">Seleccionar...</option>
-                            <option>Efectivo</option>
-                            <option>Tarjeta</option>
-                        </select><br>
-                        <label for="">Proveedor:</label>
-                        <select name="selectProveedor">
+                    <form action="menu-compras.php" method="post" enctype="multipart/form-data">
+                        <h1>Detalle de compras</h1>
+                        <label for="">Producto:</label>
+                        <select name="selectProducto">
                             <?php
                                 echo "<option value='0'>Seleccionar...</option>";
-                                $sql = "SELECT id, nombre FROM proveedores;";
+                                $sql = "SELECT id, nombre FROM productos;";
                                 $resultado = $mysqli->query($sql);
                                 foreach($resultado as $row){
                                     echo "<option value='".$row['id']."'>".$row['nombre']."</option>";
                                 } 
                             ?>
                         </select><br>
-                        <button id="btnNewCustomer" name="registrarProducto" type="submit">Siguiente</button>
+                        <label for="">Cantidad:</label>
+                        <input type="text" name="txtStock"><br>
+                        <label for="">Precio Unitario:</label>
+                        <input type="text" name="txtPrecioUnitario"><br>
+                        <div class="contentButtonsProduct">
+                            <button class="buttonProduct" name="irAtras" class="irAtras">Atrás</button>
+                            <button class="buttonProduct" name="registrarCompra" type="submit">Registrar compra</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -139,6 +182,18 @@
     let toggle = document.querySelector('.toggle');
     let navigation = document.querySelector('.containerBar');
     let main = document.querySelector('.main');
+    let buttonNext = document.querySelector('.addShoppingFirst');
+    let buttonBack = document.querySelector('.addShoppingSecond');
+
+    function pasarSiguiente(){
+        buttonNext.style.display = "none";
+        buttonBack.style.display = "initial";
+    }
+
+    document.querySelector('.pasarSiguiente').onclick = function() {
+        buttonNext.style.display = "none";
+        buttonBack.style.display = "initial";
+    }
 
     toggle.onclick = function() {
         navigation.classList.toggle('active');

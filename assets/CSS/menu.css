@@ -562,7 +562,8 @@ hr {
 }
 
 .contentMain form button,
-#btnNewCustomer {
+#btnNewCustomer,
+.buttonProduct {
     background: var(--blue);
     border: none;
     color: white;
@@ -590,6 +591,35 @@ hr {
     height: calc(100% - 5em);
     /* height: 100%; */
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+}
+
+.addShoppingFirst {
+    /* display: none; */
+}
+
+.addShoppingSecond {
+    /* display: none; */
+}
+
+.contentButtonsProduct {
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttonProduct {
+    padding: .8em 2em;
+}
+
+.buttonProduct:first-child {
+    background-color: white;
+    color: var(--blue);
+    border: solid 0.01em var(--blue);
+}
+
+.buttonProduct:hover {
+    background-color: var(--blue);
+    color: white;
 }
