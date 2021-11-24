@@ -119,7 +119,7 @@
                             <?php
                                 $sql = "SELECT count(*) FROM ventas;";
                                 $resultado = $mysqli->query($sql);
-                                echo $resultado->fetch_array()[0] ?? 'Hola';
+                                echo $resultado->fetch_array()[0] ?? 0;
                             ?>
                         </div>
                         <div class="cardName">Ventas</div>
@@ -148,16 +148,16 @@
                         <div class="numbers">
                             <?php
                                 $sql1 = "SELECT SUM(total) FROM ventas";
-                                $sql2 = "SELECT SUM(total) FROM ventas";
+                                $sql2 = "SELECT SUM(Total) FROM compras";
                                 $resultadoVenta = $mysqli->query($sql1);
                                 $resultadoCompra = $mysqli->query($sql2);
                                 $ganancias = $resultadoVenta->fetch_array()[0] ?? 0;
-                                $gastos = $resultadoVenta->fetch_array()[0] ?? 0;
+                                $gastos = $resultadoCompra->fetch_array()[0] ?? 0;
                                 $resultado = $ganancias - $gastos;
-                                echo "$".$resultado;
+                                echo "s/ ".$resultado
                             ?>
                         </div>
-                        <div class="cardName">Ganancias</div>
+                        <div class="cardName">Balance</div>
                     </div>
                     <div class="iconBx">
                         <ion-icon name="podium"></ion-icon>
@@ -169,32 +169,40 @@
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Productos Recientes</h2>
+                        <h2>Compras Recientes</h2>
                         <a class="btn">View All</a>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <td>Nombre</td>
-                                <td>Precio</td>
-                                <td>Cantidad</td>
+                                <td>Id Venta</td>
                                 <td>Fecha</td>
+                                <td>Administrador</td>
+                                <td>Total</td>
+                                <td>Mostrar</td>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                                 $arrayStatus = array("delivered","pending","return","progress");
-                                $cantidad = 0;
-                                $sentence = "SELECT c.nombre nombreProducto, c.cantidad, c.precio, d.nombre nombreFamilia FROM productos c INNER JOIN familias d ON c.id = d.id;";
+                                $sentence = "SELECT c.id, c.fecha, c.Total, d.nombres nombreAdmin FROM compras c INNER JOIN usuarios d ON c.idAdmin_fk = d.id;";
                                 $rpta = $mysqli->query($sentence);
-                                foreach($rpta as $row){
+                                foreach($rpta as $row){ 
+                                    $estado = $arrayStatus[2];
                                     echo "<tr>";
-                                    echo "<td>".$row['nombreProducto']."</td>";
-                                    echo "<td>$".$row['precio']."</td>";
-                                    echo "<td>".$row['cantidad']."</td>";
-                                    echo "<td><span class='status ".$arrayStatus[$cantidad]."'>".$row['nombreFamilia']."</span></td>";
+                                    $nombres = explode(" ", $row['nombreAdmin']);
+                                    $nombre = $nombres[0]." ".$nombres[2];
+                                    echo "<td>".$row['id']."</td>";
+                                    echo "<td>".$row['fecha']."</td>";
+                                    echo "<td>".$nombre."</td>";
+                                    if($row['Total'] > 20 && $row['Total'] < 100) $estado = $arrayStatus[1]; 
+                                    if($row['Total'] >= 100 && $row['Total'] < 500) $estado = $arrayStatus[3]; 
+                                    if($row['Total'] >= 500) $estado = $arrayStatus[0]; 
+                                    echo "<td><span class='status ".$estado."'>s/ ";
+                                    echo $row['Total']."</span></td>";
+                                    $idVenta = $row['id'];
+                                    echo "<td><a class='a' href='menuDetalles.php?idVenta=".$idVenta."'><ion-icon name='eye'></ion-icon></a></td>";
                                     echo "</tr>";
-                                    if($cantidad == 3) $cantidad = 0; else $cantidad++;
                                 } 
                             ?>
                         </tbody>
@@ -218,36 +226,6 @@
                                 echo "<tr><td width='60px'><div class='imgBx'><img src='../assets/Resources/img/image_listview.jpg' alt='Foto de usuarios'></div></td><td><h4>".$row['nombres']."<br><span>".$row['id']."</span></h4></td></tr>";
                             }
                         ?>
-                        <!-- <tr>
-                            <td width="60px">
-                                <div class="imgBx">
-                                    <img src="../assets/Resources/slider-images/img2-2.jpg" alt="Foto de usuarios">
-                                </div>
-                            </td>
-                            <td>
-                                <h4>
-                                    David<br>
-                                    <span>Italy</span>
-                                </h4>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="../assets/Resources/slider-images/img2-2.jpg" alt="Foto de usuarios"></div>
-                            </td>
-                            <td>
-                                <h4>David<br><span>Italy</span></h4>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="../assets/Resources/slider-images/img2-2.jpg" alt="Foto de usuarios"></div>
-                            </td>
-                            <td>
-                                
-                                <h4>David<br><span>Italy</span></h4>
-                            </td>
-                        </tr> -->
                     </table>
                 </div>
             </div>

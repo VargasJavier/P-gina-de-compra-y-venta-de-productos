@@ -18,9 +18,9 @@
       // $pass_c = sha1($password);
 
       if($password_bd == $password){
-        $_SESSION['id'] = $row['id_usuario'];
+        $_SESSION['id'] = $row['id'];
         $_SESSION['nombre'] = $row['nombres'];
-        $_SESSION['tipo'] = $row['tipo_usuario'];
+        $_SESSION['tipo'] = $row['tipoUsuario_fk'];
         $_SESSION['password'] = $row['contraseña'];
         header("Location: ../index.php");
       }else{

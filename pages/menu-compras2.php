@@ -1,14 +1,14 @@
 <?php
     require 'conexion.php';
     session_start();
+    
     if(!isset($_SESSION['nombre'])){
         header("Location: ../index.php");
     }
-    $idCompra = $_SESSION['id'];
-    $tipoCompra = $_SESSION['tipo'];
     $nombrePOST = $_SESSION['nombre'];
     $nombreArray = explode(" ",$nombrePOST);
     $nombres = $nombreArray[0]." ".$nombreArray[1];
+
 ?>
 
 <!DOCTYPE html>
@@ -76,7 +76,7 @@
             </div>
             <!-- Search -->
             <div class="search">
-                <a href="../index.php">Regresar</a>
+                <a href="menu-compras.php">Regresar</a>
             </div>
             <!-- userImg -->
             <!-- <div class="user"> -->
@@ -93,47 +93,81 @@
                 </div>
             </div>
         </div>
-        <div class="addShopping">
+        <div class="addShopping addShoppingPrueba">
             <div class="card addShoppingFirst">
-                <?php
-                    if(isset($_POST['registrarCompra']) && $tipoCompra == 0){
-                        if($_POST['selectPago'] != 0 && $_POST['selectProveedor'] != 0){
-                            $pagoCompra = $_POST['selectPago'];
-                            $proveedorCompra = $_POST['selectProveedor'];
-                            $timeCompra = new DateTime();
-                            $fechaCompra = $timeCompra->format("Y-m-d h:i:s a");
-                            $sql = "INSERT INTO `compras` (`fecha`, `Total`, `idAdmin_fk`, `idProveedor_fk`, `metodoPago`) VALUES ('$fechaCompra', 0, '$idCompra', $proveedorCompra, '$pagoCompra')";
-                            $resultado = $mysqli->query($sql);
-                            if($resultado)
-                                echo "Registro exitoso";
-                            else
-                                echo "Error en el registro";
-                        }else{
-                            echo "Error al registrar. Vuelve a intentarlo";
-                        }
-                    }
-                ?>
-                <form action="comprasInsert.php" method="post">
-                    <h1>Registrar compra</h1>
-                    <label>Método de pago:</label>
-                    <select required name="selectPago">
-                        <option value="0">Seleccionar...</option>
-                        <option>Efectivo</option>
-                        <option>Tarjeta</option>
-                    </select><br>
-                    <label>Proveedor:</label>
-                    <select required name="selectProveedor">
+                <form action="detallescomprasInsert.php" method="post">
+                    <h1>Detalles de compra</h1>
+                    <label for="">Producto:</label>
+                    <select required name="selectProducto">
                         <?php
                             echo "<option value='0'>Seleccionar...</option>";
-                            $sql = "SELECT id, nombre FROM proveedores;";
+                            $sql = "SELECT id, nombre FROM productos;";
                             $resultado = $mysqli->query($sql);
                             foreach($resultado as $row){
                                 echo "<option value='".$row['id']."'>".$row['nombre']."</option>";
                             } 
                         ?>
                     </select><br>
-                    <button id="btnNewCustomer" type="submit" class="pasarSiguiente">Siguiente</button>
+                    <label for="">Cantidad:</label>
+                    <input name="cantidad"></input><br>
+                    <label for="">Precio:</label>
+                    <input name="precio"></input><br>
+                    <button id="btnNewCustomer" type="submit" class="pasarSiguiente">Agregar</button>
                 </form>
+            </div>
+            <div class="details">
+                <div class="recentOrders">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Item</td>
+                                <td>Nombre</td>
+                                <td>Cantidad</td>
+                                <td>Precio x unidad</td>
+                                <td>Subtotal</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                            $sentencia = "SELECT id, fecha FROM compras WHERE id = (SELECT MAX(id) FROM compras);";
+                            $result = $mysqli->query($sentencia);
+                            foreach($result as $row){
+                            $idCompraGET = $row['id'];
+                            }
+                            $sql = "SELECT c.precioUnitario, c.stock, c.subTotal, d.nombre nombreProducto FROM detalleCompras c INNER JOIN productos d ON c.idProducto_fk = d.id WHERE c.idCompra_fk = $idCompraGET;";
+                            $resultado = $mysqli->query($sql);
+                            $contador = 1;
+                            $num = $resultado->num_rows;
+    
+                            if($num == 0){
+                                echo "<tr><td></td>";
+                                echo "<td></td>";
+                                echo "<td>Sin resultados</td>";
+                                echo "<td></td>";
+                                echo "<td></td></tr>";
+                            }
+                            foreach($resultado as $row){
+                                echo "<tr>";
+                                echo "<td>".$contador.".</td>";
+                                echo "<td>".$row['nombreProducto']."</td>";
+                                echo "<td>".$row['stock']."</td>";
+                                echo "<td>s/ ".$row['precioUnitario']."</td>";
+                                echo "<td>s/ ".$row['subTotal']."</td>";
+                                $contador++;
+                            } echo "</tr>";
+                        ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Item</td>
+                                <td>Nombre</td>
+                                <td>Cantidad</td>
+                                <td>Precio x unidad</td>
+                                <td>Subtotal</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
   </div>

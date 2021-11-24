@@ -590,17 +590,14 @@ hr {
     width: 100%;
     height: calc(100% - 5em);
     /* height: 100%; */
+    flex-direction: row;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
-.addShoppingFirst {
-    /* display: none; */
-}
-
-.addShoppingSecond {
-    /* display: none; */
+.addShoppingPrueba {
+    margin-left: 15em;
 }
 
 .contentButtonsProduct {
@@ -622,4 +619,10 @@ hr {
 .buttonProduct:hover {
     background-color: var(--blue);
     color: white;
+}
+
+.td a,
+.a {
+    cursor: pointer;
+    color: #222;
 }
