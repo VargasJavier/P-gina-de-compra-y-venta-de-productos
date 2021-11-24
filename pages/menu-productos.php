@@ -104,6 +104,7 @@
                                     <td>Cantidad</td>
                                     <td>Precio</td>
                                     <td>Familia</td>
+                                    <td>Estado</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -111,11 +112,22 @@
                                     $sql = "SELECT c.nombre nombreProducto, c.cantidad, c.precio, d.nombre nombres FROM productos c INNER JOIN familias d ON c.idFamilia_fk = d.id;";
                                     $resultado = $mysqli->query($sql);
                                     foreach($resultado as $row){
+                                    $status = "Disponible";
+                                    $color = "delivered";
+                                        if($row['cantidad'] == 0){
+                                            $color = "return";
+                                            $status = "No disponible";
+                                        }else if($row['cantidad'] < 20){
+                                            $color = "pending";
+                                            $status = "Pocas unidades";
+                                        }
                                         echo "<tr>";
                                         echo "<td>".$row['nombreProducto']."</td>";
                                         echo "<td>".$row['cantidad']."</td>";
                                         echo "<td>$".$row['precio']."</td>";
                                         echo "<td>".$row['nombres']."</td>";
+                                        echo "<td><span class='status ".$color."'>";
+                                        echo $status."</span></td>";
                                     } echo "</tr>";
 
                                 ?>
@@ -126,6 +138,7 @@
                                     <td>Cantidad</td>
                                     <td>Precio</td>
                                     <td>Familia</td>
+                                    <td>Estado</td>
                                 </tr>
                             </tfoot>
                         </table>

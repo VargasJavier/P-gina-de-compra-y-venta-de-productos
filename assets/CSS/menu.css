@@ -577,9 +577,20 @@ hr {
     margin-left: 1.5em;
 }
 
+.contentClientes {
+    padding: 8em 0em;
+}
+
+.contentClientes2 {
+    height: calc(100% - 20.75em);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .contentClientes .details .recentOrders {
     width: 100%;
-    margin: 0 auto;
+    margin: 1em auto;
 }
 
 
@@ -625,4 +636,37 @@ hr {
 .a {
     cursor: pointer;
     color: #222;
+}
+
+a#btnNewCustomer {
+    text-decoration: none;
+}
+
+a#btnNewCustomer:hover {
+    background-color: #1859c0;
+}
+
+.contentTelefonos {
+    display: flex;
+    flex-direction: row;
+}
+
+.contentTelefonos input {
+    width: 30%;
+    margin-left: 1em;
+}
+
+.contentTelefonos input:first-child {
+    margin-left: 0;
+}
+
+.contentRed {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: .5em;
+}
+
+.contentRed select {
+    width: 35%;
 }

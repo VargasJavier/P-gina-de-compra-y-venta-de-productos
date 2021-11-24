@@ -99,46 +99,64 @@
                 </div>
             </div>
 
-            <div class="contentClientes">
-                <div class="contentButtonCustomer">
-                    <a id="btnNewCustomer" href="menu-clientes2.php">Registrar cliente</a>
-                </div>
-                <div class="details">
-                    <div class="recentOrders">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td>ID</td>
-                                    <td>Nombre</td>
-                                    <td>Dirección</td>
-                                    <td>Teléfono</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                                $sql = "SELECT c.id, c.nombres,c.direccion, d.telefono FROM clientes c INNER JOIN telefonos d ON c.id = d.idCliente_fk;";
-                                $resultado = $mysqli->query($sql);
-                                foreach($resultado as $row){
-                                    if($row['id'] == $nombres) continue;
-                                    echo "<tr>";
-                                    echo "<td>".$row['id']."</td>";
-                                    echo "<td>".$row['nombres']."</td>";
-                                    echo "<td>".$row['direccion']."</td>";
-                                    echo "<td>".$row['telefono']."</td>";
-                                    $nombres = $row['id'];
-                                } echo "</tr>";
-                            ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>ID</td>
-                                    <td>Nombre</td>
-                                    <td>Teléfono</td>
-                                    <td>N° Compras</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+            <div class="contentClientes contentClientes2">
+                <div class="addCustomer card">
+                    <?php
+                        if(isset($_POST['registrarCliente'])){
+                            $idCliente = $_POST['txtId'];
+                            $nombreCliente = $_POST['txtNombre'];
+                            $direccionCliente = $_POST['txtDireccion'];
+                            $telefonoCliente = $_POST['txtTelefono'];
+                            $redCliente = $_POST['txtRedSocial'];
+                            $idTelefono = $idCliente."_".$telefonoCliente;
+                            $idRed = $idCliente."_Facebook";
+                            $sql = "INSERT INTO clientes VALUES ('$idCliente','$nombreCliente','$direccionCliente');";
+                            $sql1 = "INSERT INTO telefonos VALUES ('$idTelefono','$telefonoCliente','$idCliente');";
+                            $sql2 = "INSERT INTO redessociales VALUES ('$idRed','Facebook','$redCliente','$idCliente');";
+                            $resultado = $mysqli->query($sql);
+                            $resultado1 = $mysqli->query($sql1);
+                            $resultado2 = $mysqli->query($sql2);
+                            if($resultado && $resultado1 && $resultado2)
+                                echo "Registro exitoso";
+                            else
+                                echo "Error en el registro";
+                        }
+                    ?>
+                    <form action="clientesInsert.php" method="post">
+                        <h2 style="text-align:center;">Registro de clientes</h2>
+                        <label for="">Identificador:</label>
+                        <input type="text" name="txtId">
+                        <label for="">Nombre:</label>
+                        <input type="text" name="txtNombre">
+                        <label for="">Dirección:</label>
+                        <input type="text" name="txtDireccion">
+                        <label for="">Teléfono:</label>
+                        <div class="contentTelefonos">
+                            <input type="tel" placeholder="Teléfono 1" name="txtTelefono1"><br>
+                            <input type="tel" placeholder="Opcional" name="txtTelefono2"><br>
+                            <input type="tel" placeholder="Opcional" name="txtTelefono3"><br>
+                        </div>
+                        <label for="">Red Social:</label>
+                        <div class="contentRed">
+                            <select>
+                                <option>Facebook</option>
+                            </select>
+                            <input type="text" name=""><br>
+                        </div>
+                        <div class="contentRed">
+                            <select>
+                                <option>Twitter</option>
+                            </select>
+                            <input type="text" name="txtRedSocial2"><br>
+                        </div>
+                        <div class="contentRed">
+                            <select>
+                                <option>Instagram</option>
+                            </select>
+                            <input type="text" name="txtRedSocial3"><br>
+                        </div>
+                        <button id="btnNewCustomer" name="registrarCliente" type="submit">Registrar</button>
+                    </form>
                 </div>
             </div>
   </div>

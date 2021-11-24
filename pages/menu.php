@@ -118,8 +118,13 @@
                         <div class="numbers">
                             <?php
                                 $sql = "SELECT count(*) FROM ventas;";
+                                if($_SESSION['tipo'] == 1){
+                                    $idVendedor = $_SESSION['id'];
+                                    $sql = "SELECT count(*) FROM ventas WHERE idVendedor_fk = '$idVendedor';";
+                                }
                                 $resultado = $mysqli->query($sql);
-                                echo $resultado->fetch_array()[0] ?? 0;
+                                $result = $resultado->fetch_array()[0] ?? 0;
+                                echo $result;
                             ?>
                         </div>
                         <div class="cardName">Ventas</div>
@@ -149,12 +154,19 @@
                             <?php
                                 $sql1 = "SELECT SUM(total) FROM ventas";
                                 $sql2 = "SELECT SUM(Total) FROM compras";
+                                if($_SESSION['tipo'] == 1){
+                                    $idVendedor = $_SESSION['id'];
+                                    $sql1 = "SELECT SUM(total) FROM ventas WHERE idVendedor_fk = '$idVendedor'";
+                                }
                                 $resultadoVenta = $mysqli->query($sql1);
                                 $resultadoCompra = $mysqli->query($sql2);
                                 $ganancias = $resultadoVenta->fetch_array()[0] ?? 0;
                                 $gastos = $resultadoCompra->fetch_array()[0] ?? 0;
                                 $resultado = $ganancias - $gastos;
-                                echo "s/ ".$resultado
+                                if($_SESSION['tipo'] == 1){
+                                    echo "s/ ".$ganancias;
+                                }else
+                                    echo "s/ ".$resultado;
                             ?>
                         </div>
                         <div class="cardName">Balance</div>
@@ -169,7 +181,12 @@
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Compras Recientes</h2>
+                        <?php
+                                if($_SESSION['tipo'] == 1){
+                                    echo "<h2>Ventas Recientes</h2>";
+                                }else
+                                echo "<h2>Compras Recientes</h2>";
+                        ?>
                         <a class="btn">View All</a>
                     </div>
                     <table>
@@ -185,8 +202,15 @@
                         <tbody>
                             <?php
                                 $arrayStatus = array("delivered","pending","return","progress");
-                                $sentence = "SELECT c.id, c.fecha, c.Total, d.nombres nombreAdmin FROM compras c INNER JOIN usuarios d ON c.idAdmin_fk = d.id;";
+                                if($_SESSION['tipo'] == 1){
+                                    $sentence = "SELECT c.id, c.fecha, c.total, d.nombres nombreAdmin FROM ventas c INNER JOIN usuarios d ON c.idVendedor_fk = d.id;";
+                                }else
+                                    $sentence = "SELECT c.id, c.fecha, c.Total, d.nombres nombreAdmin FROM compras c INNER JOIN usuarios d ON c.idAdmin_fk = d.id;";
                                 $rpta = $mysqli->query($sentence);
+                                $num = $rpta->num_rows;
+                                if($num == 0){
+                                    echo "<tr><td></td><td></td><td>Sin ventas registradas</td><td></td><td></td></tr>";
+                                }
                                 foreach($rpta as $row){ 
                                     $estado = $arrayStatus[2];
                                     echo "<tr>";
@@ -206,6 +230,15 @@
                                 } 
                             ?>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Id Venta</td>
+                                <td>Fecha</td>
+                                <td>Administrador</td>
+                                <td>Total</td>
+                                <td>Mostrar</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <!-- New Customers -->

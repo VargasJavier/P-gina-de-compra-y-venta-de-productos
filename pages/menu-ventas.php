@@ -84,34 +84,49 @@
                     </div>
                 </div>
             </div>
-        <div class="contentMain">                
-            <div class="card">
-                <h2>Registrar Ventas</h2>
-                <?php
-                    if(isset($_REQUEST['botonPassword'])){
-                        $contraseñaPOST = $_POST['contraseñaActual'];
-                        if($contraseña == $contraseñaPOST){
-                            $contraseñaNueva = $_POST['nuevaContraseña'];
-                            $id = $_SESSION['id'];
-                            $sql = "UPDATE usuario SET contraseña='".$contraseñaNueva."' WHERE id_usuario = '$id'";
-                            $resultado = $mysqli->query($sql);
-                            if($resultado){
-                                echo "Contraseña modificada";   
-                                $_SESSION['password'] = $contraseñaNueva;
+            <div class="addShopping">
+                <div class="card addShoppingFirst">
+                    <?php
+                        if(isset($_POST['registrarCompra']) && $tipoCompra == 0){
+                            if($_POST['selectPago'] != 0 && $_POST['selectProveedor'] != 0){
+                                $pagoCompra = $_POST['selectPago'];
+                                $proveedorCompra = $_POST['selectProveedor'];
+                                $timeCompra = new DateTime();
+                                $fechaCompra = $timeCompra->format("Y-m-d h:i:s a");
+                                $sql = "INSERT INTO `compras` (`fecha`, `Total`, `idAdmin_fk`, `idProveedor_fk`, `metodoPago`) VALUES ('$fechaCompra', 0, '$idCompra', $proveedorCompra, '$pagoCompra')";
+                                $resultado = $mysqli->query($sql);
+                                if($resultado)
+                                    echo "Registro exitoso";
+                                else
+                                    echo "Error en el registro";
+                            }else{
+                                echo "Error al registrar. Vuelve a intentarlo";
                             }
-                        }else{
-                            echo "Su contraseña actual no coincide. Vuelva a intentarlo 1".$contraseña." 2".$contraseñaPOST;
                         }
-                    }
-                ?>
-                <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
-                    <input type="password" name="contraseñaActual" placeholder="Ingrese su contraseña actual">
-                    <input type="password" name="nuevaContraseña" placeholder="Ingrese su nueva contraseña">
-                    <button type="submit" name="botonPassword">Registrar</button>
-                </form>
+                    ?>
+                    <form action="ventasInsert.php" method="post">
+                        <h1>Registrar compra</h1>
+                        <label>Método de pago:</label>
+                        <select required name="selectPago">
+                            <option value="0">Seleccionar...</option>
+                            <option>Efectivo</option>
+                            <option>Tarjeta</option>
+                        </select><br>
+                        <label>Cliente:</label>
+                        <select required name="selectCliente">
+                            <?php
+                                echo "<option value='0'>Seleccionar...</option>";
+                                $sql = "SELECT id, nombres FROM clientes;";
+                                $resultado = $mysqli->query($sql);
+                                foreach($resultado as $row){
+                                    echo "<option value='".$row['id']."'>".$row['nombres']."</option>";
+                                } 
+                            ?>
+                        </select><br>
+                        <button id="btnNewCustomer" type="submit" class="pasarSiguiente">Siguiente</button>
+                    </form>
+                </div>
             </div>
-
-        </div> 
   </div>
 </body>
 
