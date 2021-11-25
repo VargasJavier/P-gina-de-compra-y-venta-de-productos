@@ -156,7 +156,7 @@
                                 $sql2 = "SELECT SUM(Total) FROM compras";
                                 if($_SESSION['tipo'] == 1){
                                     $idVendedor = $_SESSION['id'];
-                                    $sql1 = "SELECT SUM(total) FROM ventas WHERE idVendedor_fk = '$idVendedor'";
+                                    $sql1 = "SELECT SUM(total) FROM ventas WHERE idVendedor_fk = '$idVendedor';";
                                 }
                                 $resultadoVenta = $mysqli->query($sql1);
                                 $resultadoCompra = $mysqli->query($sql2);
@@ -178,7 +178,7 @@
             </div>
 
             <!-- details list -->
-            <div class="details">
+            <di class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
                         <?php
@@ -205,7 +205,7 @@
                                 if($_SESSION['tipo'] == 1){
                                     $sentence = "SELECT c.id, c.fecha, c.total, d.nombres nombreAdmin FROM ventas c INNER JOIN usuarios d ON c.idVendedor_fk = d.id;";
                                 }else
-                                    $sentence = "SELECT c.id, c.fecha, c.Total, d.nombres nombreAdmin FROM compras c INNER JOIN usuarios d ON c.idAdmin_fk = d.id;";
+                                    $sentence = "SELECT c.id, c.fecha, c.Total total, d.nombres nombreAdmin FROM compras c INNER JOIN usuarios d ON c.idAdmin_fk = d.id;";
                                 $rpta = $mysqli->query($sentence);
                                 $num = $rpta->num_rows;
                                 if($num == 0){
@@ -219,11 +219,11 @@
                                     echo "<td>".$row['id']."</td>";
                                     echo "<td>".$row['fecha']."</td>";
                                     echo "<td>".$nombre."</td>";
-                                    if($row['Total'] > 20 && $row['Total'] < 100) $estado = $arrayStatus[1]; 
-                                    if($row['Total'] >= 100 && $row['Total'] < 500) $estado = $arrayStatus[3]; 
-                                    if($row['Total'] >= 500) $estado = $arrayStatus[0]; 
+                                    if($row['total'] > 20 && $row['total'] < 100) $estado = $arrayStatus[1]; 
+                                    if($row['total'] >= 100 && $row['total'] < 500) $estado = $arrayStatus[3]; 
+                                    if($row['total'] >= 500) $estado = $arrayStatus[0]; 
                                     echo "<td><span class='status ".$estado."'>s/ ";
-                                    echo $row['Total']."</span></td>";
+                                    echo $row['total']."</span></td>";
                                     $idVenta = $row['id'];
                                     echo "<td><a class='a' href='menuDetalles.php?idVenta=".$idVenta."'><ion-icon name='eye'></ion-icon></a></td>";
                                     echo "</tr>";
@@ -261,6 +261,10 @@
                         ?>
                     </table>
                 </div>
+            </div>
+
+            <div class="contentButton">
+                <a href="validacionSettings.php" id="btnNewCustomer">Configuraciones</a>
             </div>
   </div>
 </body>

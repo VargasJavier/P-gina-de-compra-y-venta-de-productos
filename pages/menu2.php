@@ -5,10 +5,8 @@
         header("Location: ../index.php");
     }
     $nombrePOST = $_SESSION['nombre'];
-    $contraseña = $_SESSION['password'];
     $nombreArray = explode(" ",$nombrePOST);
     $nombres = $nombreArray[0]." ".$nombreArray[1];
-    
 ?>
 
 <!DOCTYPE html>
@@ -36,8 +34,8 @@
                 </a>
                 <hr>
             </li>
-            <li>
-                <a class="home" href="menu.php">
+            <li class="hovered">
+                <a class="home">
                     <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
                     <span class="title">Home</span>
                 </a>
@@ -49,13 +47,20 @@
                     $arrayIcon = array("cart-outline","man-outline","dice-outline","lock-closed-outline");
                     $arrayHref = array("menu-compras.php","menu-clientes.php","menu-productos.php","menu-contraseña.php");
                     for($i = 0; $i < count($array); $i++){
-                        if($i == 3){
-                            echo '<li class="hovered">';
-                            echo '<a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
-                        }else echo '<li><a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
+                        echo "<li>";
+                        echo '<a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
                         echo '<span class="icon"><ion-icon name="'.$arrayIcon[$i].'"></ion-icon></span>';
                         echo '<span class="title">'.$array[$i].'</span></a></li>';
                     }
+                }else{
+                    echo "<li>";
+                    echo'<a class="shop" href="menu-ventas.php">';
+                    echo '<span class="icon"><ion-icon name="cash"></ion-icon></span>';
+                    echo '<span class="title">Ventas</span></a></li>'; 
+                    echo "<li>";
+                    echo'<a class="customer" href="menu-clientes.php">';
+                    echo '<span class="icon"><ion-icon name="man-outline"></ion-icon></span>';
+                    echo '<span class="title">Clientes</span></a></li>';
                 }
             ?>
             <li>
@@ -69,72 +74,60 @@
     <!-- Contenedor de contenedores -->
     <div class="contentContenedores main">
     <!-- main -->
-        <div class="topbar">
-            <div class="toggle">
-                <ion-icon name="menu"></ion-icon>
-            </div>
-            <!-- Search -->
-            <div class="search">
-                <a href="../index.php">Regresar</a>
-            </div>
-            <!-- userImg -->
-            <!-- <div class="user"> -->
-            <div>
-                <div class="contentAccess" style="display: flex; align-items: center; justify-content: space-between; width: 12em;">
-                <?php
-                    if(isset($_SESSION['nombre'])){
-                        echo '<ion-icon name="person-outline"></ion-icon>';
-                        echo "<span>".$nombres."</span>";
-                    }else{
-                        echo "chau";
-                    }
-                ?>
+
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu"></ion-icon>
+                </div>
+                <!-- Search -->
+                <div class="search">
+                    <a href="menu.php">Regresar</a>
+                </div>
+                <div>
+                    <div class="contentAccess" style="display: flex; align-items: center; justify-content: space-between; width: 12em;">
+                    <?php
+                        if(isset($_SESSION['nombre'])){
+                            echo '<ion-icon name="person-outline"></ion-icon>';
+                            echo "<span>".$nombres."</span>";
+                        }else{
+                            echo "chau";
+                        }
+                    ?>
+                    </div>
                 </div>
             </div>
-        </div>         
-        <div class="contentMain">
+            <div class="contentMain">
             <div class="card">
-                <h2>Modificar contraseña</h2>
+                <h2>Configuraciones anuales</h2>
+                <p style="text-align:center;">
+                    Recuerda que una vez configurada, no podrás modificarla hasta terminar el año. ¡Así que cuidado!
+                </p>
                 <?php
-                    if(isset($_REQUEST['botonPassword'])){
-                        $contraseñaPOST = $_POST['contraseñaActual'];
-                        if($contraseña == $contraseñaPOST){
-                            $contraseñaNueva = $_POST['nuevaContraseña'];
-                            $id = $_POST['select'];
-                            $sql = "UPDATE usuarios SET contraseña='".$contraseñaNueva."' WHERE id = '$id'";
-                            $resultado = $mysqli->query($sql);
-                            if($resultado){
-                                echo "Contraseña modificada";   
-                                $_SESSION['password'] = $contraseñaNueva;
-                            }else{
-                                echo "No se pudo modificar. Intente nuevamente";
-                            }
-                        }else{
-                            echo "Su contraseña actual no coincide. Vuelva a intentarlo 1".$contraseña." 2".$contraseñaPOST;
-                        }
+                    if(isset($_REQUEST['botonSettings'])){
+                        $año = date('Y');
+                        $meta = $_POST['txtMeta'];
+                        $comisionVendedor = $_POST['txtComisionVendedor'];
+                        $porcentaje = $_POST['txtPorcentajeProductos'];
+                        $sql = "INSERT INTO `configuracioncomisiones` (`año`, `importe`, `porcentajeVenta`, `porcentajeVendedor`) VALUES ($año, $meta, $comisionVendedor, $porcentaje);";
+                        $resultado = $mysqli->query($sql);
+                        if($resultado)
+                            header("Location: menu3.php");
+                        else
+                            echo "Sucedió un error. Inténtalo de nuevo";
                     }
                 ?>
-                <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
-                <br><select name="select">
-                        <?php
-                            $sql = "SELECT id, nombres FROM usuarios;";
-                            $resultado = $mysqli->query($sql);
-                            echo "<option value='0'>Seleccionar cuenta</option>";
-                            foreach($resultado as $row){
-                                echo "<option value='".$row['id']."'>".$row['nombres']."</option>";
-                            } 
-                        ?>
-                    </select><br>
-                    <input type="password" name="contraseñaActual" placeholder="Ingrese su contraseña actual"><br>
-                    <input type="password" name="nuevaContraseña" placeholder="Ingrese su nueva contraseña"><br>
-                    <div class="contentButtonsVenta">
-                        <a id="btnNewCustomer" class="addCustomerButton" href="menu-contraseña2.php">Registrar usuario</a>
-                        <button style="padding: 0 2em;" type="submit" name="botonPassword">Modificar</button>
-                    </div>
+                <form class="formSettings" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+                    <label>Meta para vendedores</label>
+                    <input type="number" name="txtMeta">
+                    <label>Porcentaje de comisión</label>
+                    <input type="number" name="txtComisionVendedor">
+                    <label>Porcentaje de productos</label>
+                    <input type="number" name="txtPorcentajeProductos">
+                    <button type="submit" name="botonSettings">Modificar</button>
                 </form>
             </div>
         </div>
-    </div>
+  </div>
 </body>
 
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

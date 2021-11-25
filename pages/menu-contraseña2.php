@@ -5,8 +5,10 @@
         header("Location: ../index.php");
     }
     $nombrePOST = $_SESSION['nombre'];
+    $contraseña = $_SESSION['password'];
     $nombreArray = explode(" ",$nombrePOST);
     $nombres = $nombreArray[0]." ".$nombreArray[1];
+    
 ?>
 
 <!DOCTYPE html>
@@ -41,14 +43,20 @@
                 </a>
             </li>
             <?php
-                echo "<li class='hovered'>";
-                echo'<a class="shop" href="menu-ventas.php">';
-                echo '<span class="icon"><ion-icon name="cash"></ion-icon></span>';
-                echo '<span class="title">Ventas</span></a></li>'; 
-                echo "<li>";
-                echo '<a class="customer" href="menu-clientes.php">';
-                echo '<span class="icon"><ion-icon name="man-outline"></ion-icon></span>';
-                echo '<span class="title">Clientes</span></a></li>';
+                if($_SESSION['tipo'] == 0){
+                    $array = array("Compras", "Clientes", "Productos", "Contraseña");
+                    $arrayClass = array("sales", "customer","products","password");
+                    $arrayIcon = array("cart-outline","man-outline","dice-outline","lock-closed-outline");
+                    $arrayHref = array("menu-compras.php","menu-clientes.php","menu-productos.php","menu-contraseña.php");
+                    for($i = 0; $i < count($array); $i++){
+                        if($i == 3){
+                            echo '<li class="hovered">';
+                            echo '<a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
+                        }else echo '<li><a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
+                        echo '<span class="icon"><ion-icon name="'.$arrayIcon[$i].'"></ion-icon></span>';
+                        echo '<span class="title">'.$array[$i].'</span></a></li>';
+                    }
+                }
             ?>
             <li>
                 <a class="sign out" href="logout.php">
@@ -60,14 +68,14 @@
     </div>
     <!-- Contenedor de contenedores -->
     <div class="contentContenedores main">
-        <!-- main -->
+    <!-- main -->
         <div class="topbar">
             <div class="toggle">
                 <ion-icon name="menu"></ion-icon>
             </div>
             <!-- Search -->
             <div class="search">
-                <a href="menu-ventas.php">Regresar</a>
+                <a href="../index.php">Regresar</a>
             </div>
             <!-- userImg -->
             <!-- <div class="user"> -->
@@ -83,24 +91,21 @@
                 ?>
                 </div>
             </div>
-        </div>
+        </div>         
         <div class="addShopping addShoppingPrueba">
             <div class="card addShoppingFirst">
-                <form action="detallesventasInsert.php" method="post">
-                    <h1>Detalles de ventas</h1>
-                    <label for="">Producto:</label>
-                    <select required name="selectProducto">
-                        <?php
-                            echo "<option value='0'>Seleccionar...</option>";
-                            $sql = "SELECT id, nombre, cantidad FROM productos WHERE precio != 0;";
-                            $resultado = $mysqli->query($sql);
-                            foreach($resultado as $row){
-                                echo "<option value='".$row['id']."'>".$row['nombre']." - ".$row['cantidad']." unidades</option>";
-                            } 
-                        ?>
+                <form action="addUser.php" method="post">
+                    <h1>Registro de usuario</h1>
+                    <label for="">Nombres y apellidos:</label>
+                    <input name="nombres"></input><br>
+                    <label for="">Teléfono:</label>
+                    <input name="telefono"></input><br>
+                    <label for="">Rol:</label>
+                    <select required name="selectRol">
+                        <option value="2">Seleccionar...</option>
+                        <option value="0">Administrador</option>
+                        <option value="1">Vendedor</option>
                     </select><br>
-                    <label for="">Cantidad:</label>
-                    <input name="cantidad"></input><br>
                     <button id="btnNewCustomer" type="submit" class="pasarSiguiente">Agregar</button>
                 </form>
             </div>
@@ -109,24 +114,16 @@
                     <table>
                         <thead>
                             <tr>
-                                <td>Item</td>
-                                <td>Nombre</td>
-                                <td>Cantidad</td>
-                                <td>Precio x unidad</td>
-                                <td>Subtotal</td>
-                                <td>Acciones</td>
+                                <td>Identificador</td>
+                                <td>Nombres</td>
+                                <td>Teléfono</td>
+                                <td>Rol</td>
                             </tr>
                         </thead>
                         <tbody>
                         <?php
-                            $sentencia = "SELECT id, fecha FROM ventas WHERE id = (SELECT MAX(id) FROM ventas);";
-                            $result = $mysqli->query($sentencia);
-                            foreach($result as $row){
-                                $idCompraGET = $row['id'];
-                            }
-                            $sql = "SELECT c.id, c.stock, c.precioUnitario, c.subTotal, d.nombre nombreProducto FROM detalleventas c INNER JOIN productos d ON c.idProducto_fk = d.id WHERE c.idVenta_fk = $idCompraGET;";
+                            $sql = "SELECT id, nombres, telefono, tipoUsuario_fk tipo FROM usuarios;";
                             $resultado = $mysqli->query($sql);
-                            $contador = 1;
                             $num = $resultado->num_rows;
     
                             if($num == 0){
@@ -137,33 +134,30 @@
                                 echo "<td></td></tr>";
                             }
                             foreach($resultado as $row){
-                                $idDetalle = $row['id'];
                                 echo "<tr>";
-                                echo "<td>".$contador.".</td>";
-                                echo "<td>".$row['nombreProducto']."</td>";
-                                echo "<td>".$row['stock']."</td>";
-                                echo "<td>s/ ".$row['precioUnitario']."</td>";
-                                echo "<td>s/ ".$row['subTotal']."</td>";
-                                echo "<td><a class='a' href='deleteDetalles.php?idDetalle=".$idDetalle."'><ion-icon name='trash-outline'></ion-icon></a></td>";
-                                $contador++;
+                                $nombre = explode(" ", $row['nombres']);
+                                $nombres = $nombre[0]." ".$nombre[2];
+                                echo "<td>".$row['id']."</td>";
+                                echo "<td>".$nombres."</td>";
+                                echo "<td>".$row['telefono']."</td>";
+                                if($row['tipo'] == 0) $tipo = "Administrador"; else $tipo="Vendedor";
+                                echo "<td>".$tipo."</td>";
                             } echo "</tr>";
                         ?>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td>Item</td>
-                                <td>Nombre</td>
-                                <td>Cantidad</td>
-                                <td>Precio x unidad</td>
-                                <td>Subtotal</td>
-                                <td>Acciones</td>
+                                <td>Identificador</td>
+                                <td>Nombres</td>
+                                <td>Teléfono</td>
+                                <td>Rol</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
         </div>
-  </div>
+    </div>
 </body>
 
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

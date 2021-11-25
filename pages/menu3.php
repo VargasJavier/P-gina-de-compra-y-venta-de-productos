@@ -1,5 +1,5 @@
 <?php
-    require 'conexion.php';
+    require "conexion.php";
     session_start();
     if(!isset($_SESSION['nombre'])){
         header("Location: ../index.php");
@@ -34,8 +34,8 @@
                 </a>
                 <hr>
             </li>
-            <li>
-            <a class="home" href="menu.php">
+            <li class="hovered">
+                <a class="home">
                     <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
                     <span class="title">Home</span>
                 </a>
@@ -47,13 +47,20 @@
                     $arrayIcon = array("cart-outline","man-outline","dice-outline","lock-closed-outline");
                     $arrayHref = array("menu-compras.php","menu-clientes.php","menu-productos.php","menu-contraseña.php");
                     for($i = 0; $i < count($array); $i++){
-                        if($i == 2){
-                            echo '<li class="hovered">';
-                            echo '<a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
-                        }else echo '<li><a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
+                        echo "<li>";
+                        echo '<a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
                         echo '<span class="icon"><ion-icon name="'.$arrayIcon[$i].'"></ion-icon></span>';
                         echo '<span class="title">'.$array[$i].'</span></a></li>';
                     }
+                }else{
+                    echo "<li>";
+                    echo'<a class="shop" href="menu-ventas.php">';
+                    echo '<span class="icon"><ion-icon name="cash"></ion-icon></span>';
+                    echo '<span class="title">Ventas</span></a></li>'; 
+                    echo "<li>";
+                    echo'<a class="customer" href="menu-clientes.php">';
+                    echo '<span class="icon"><ion-icon name="man-outline"></ion-icon></span>';
+                    echo '<span class="title">Clientes</span></a></li>';
                 }
             ?>
             <li>
@@ -67,16 +74,15 @@
     <!-- Contenedor de contenedores -->
     <div class="contentContenedores main">
     <!-- main -->
+
             <div class="topbar">
                 <div class="toggle">
                     <ion-icon name="menu"></ion-icon>
                 </div>
                 <!-- Search -->
                 <div class="search">
-                    <a href="../index.php">Regresar</a>
+                    <a href="menu.php">Regresar</a>
                 </div>
-                <!-- userImg -->
-                <!-- <div class="user"> -->
                 <div>
                     <div class="contentAccess" style="display: flex; align-items: center; justify-content: space-between; width: 12em;">
                     <?php
@@ -90,61 +96,50 @@
                     </div>
                 </div>
             </div>
-            <div class="contentClientes">
-                <div class="contentButtonCustomer">
-                    <a href="menu-productos2.php"><button style="padding:.8em 1.5em;" id="btnNewCustomer" type="button">Registrar producto</button></a>
-                    <a href="menu-productos3.php"><button id="btnNewCustomer" type="button">Registrar familia</button></a>
-                </div>
-                <div class="details">
-                    <div class="recentOrders">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td>Nombre</td>
-                                    <td>Cantidad</td>
-                                    <td>Precio</td>
-                                    <td>Familia</td>
-                                    <td>Estado</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                                    $sql = "SELECT c.nombre nombreProducto, c.cantidad, c.precio, d.nombre nombres FROM productos c INNER JOIN familias d ON c.idFamilia_fk = d.id;";
-                                    $resultado = $mysqli->query($sql);
-                                    foreach($resultado as $row){
-                                    $status = "Disponible";
-                                    $color = "delivered";
-                                        if($row['cantidad'] == 0){
-                                            $color = "return";
-                                            $status = "No disponible";
-                                        }else if($row['cantidad'] < 20){
-                                            $color = "pending";
-                                            $status = "Pocas unidades";
-                                        }
-                                        echo "<tr>";
-                                        echo "<td>".$row['nombreProducto']."</td>";
-                                        echo "<td>".$row['cantidad']."</td>";
-                                        echo "<td>$".$row['precio']."</td>";
-                                        echo "<td>".$row['nombres']."</td>";
-                                        echo "<td><span class='status ".$color."'>";
-                                        echo $status."</span></td>";
-                                    } echo "</tr>";
-
-                                ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>Nombre</td>
-                                    <td>Cantidad</td>
-                                    <td>Precio</td>
-                                    <td>Familia</td>
-                                    <td>Estado</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Configuraciones generales</h2>
+                        <a class="btn">View All</a>
                     </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Año</td>
+                                <td>Importe a pasar</td>
+                                <td>Porcentaje a pagar</td>
+                                <td>Porcentaje para los productos</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $año = date('Y');
+                                $sentence = "SELECT año, importe, porcentajeVenta, porcentajeVendedor FROM configuracioncomisiones WHERE año = $año;";
+                                $rpta = $mysqli->query($sentence);
+                                $num = $rpta->num_rows;
+                                if($num == 0){
+                                    echo "<tr><td></td><td></td><td>Sin configuraciones registradas</td><td></td><td></td></tr>";
+                                }
+                                foreach($rpta as $row){ 
+                                    echo "<tr>";
+                                    echo "<td>".$row['año']."</td>";
+                                    echo "<td>s/ ".$row['importe']."</td>";
+                                    echo "<td>".$row['porcentajeVenta']." %</td>";
+                                    echo "<td>".$row['porcentajeVendedor']." %</td>";
+                                    echo "</tr>";
+                                } 
+                            ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Año</td>
+                                <td>Importe a pasar</td>
+                                <td>Porcentaje a pagar</td>
+                                <td>Porcentaje para los productos</td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-
             </div>
   </div>
 </body>

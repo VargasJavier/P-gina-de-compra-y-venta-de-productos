@@ -1,5 +1,5 @@
 <?php
-    require "conexion.php";
+    require 'conexion.php';
     session_start();
     if(!isset($_SESSION['nombre'])){
         header("Location: ../index.php");
@@ -35,20 +35,26 @@
                 <hr>
             </li>
             <li>
-                <a class="home" href="menu.php">
+            <a class="home" href="menu.php">
                     <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
                     <span class="title">Home</span>
                 </a>
             </li>
             <?php
-                echo "<li class='hovered'>";
-                echo'<a class="shop" href="menu-ventas.php">';
-                echo '<span class="icon"><ion-icon name="cash"></ion-icon></span>';
-                echo '<span class="title">Ventas</span></a></li>'; 
-                echo "<li>";
-                echo '<a class="customer" href="menu-clientes.php">';
-                echo '<span class="icon"><ion-icon name="man-outline"></ion-icon></span>';
-                echo '<span class="title">Clientes</span></a></li>';
+                if($_SESSION['tipo'] == 0){
+                    $array = array("Compras", "Clientes", "Productos", "Contraseña");
+                    $arrayClass = array("sales", "customer","products","password");
+                    $arrayIcon = array("cart-outline","man-outline","dice-outline","lock-closed-outline");
+                    $arrayHref = array("menu-compras.php","menu-clientes.php","menu-productos.php","menu-contraseña.php");
+                    for($i = 0; $i < count($array); $i++){
+                        if($i == 2){
+                            echo '<li class="hovered">';
+                            echo '<a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
+                        }else echo '<li><a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
+                        echo '<span class="icon"><ion-icon name="'.$arrayIcon[$i].'"></ion-icon></span>';
+                        echo '<span class="title">'.$array[$i].'</span></a></li>';
+                    }
+                }
             ?>
             <li>
                 <a class="sign out" href="logout.php">
@@ -60,14 +66,14 @@
     </div>
     <!-- Contenedor de contenedores -->
     <div class="contentContenedores main">
-        <!-- main -->
+    <!-- main -->
         <div class="topbar">
             <div class="toggle">
                 <ion-icon name="menu"></ion-icon>
             </div>
             <!-- Search -->
             <div class="search">
-                <a href="menu-ventas.php">Regresar</a>
+                <a href="menu-productos.php">Regresar</a>
             </div>
             <!-- userImg -->
             <!-- <div class="user"> -->
@@ -83,80 +89,46 @@
                 ?>
                 </div>
             </div>
-        </div>
+        </div>       
         <div class="addShopping addShoppingPrueba">
             <div class="card addShoppingFirst">
-                <form action="detallesventasInsert.php" method="post">
-                    <h1>Detalles de ventas</h1>
-                    <label for="">Producto:</label>
-                    <select required name="selectProducto">
-                        <?php
-                            echo "<option value='0'>Seleccionar...</option>";
-                            $sql = "SELECT id, nombre, cantidad FROM productos WHERE precio != 0;";
-                            $resultado = $mysqli->query($sql);
-                            foreach($resultado as $row){
-                                echo "<option value='".$row['id']."'>".$row['nombre']." - ".$row['cantidad']." unidades</option>";
-                            } 
-                        ?>
-                    </select><br>
-                    <label for="">Cantidad:</label>
-                    <input name="cantidad"></input><br>
-                    <button id="btnNewCustomer" type="submit" class="pasarSiguiente">Agregar</button>
+                <form action="addUser.php" method="post">
+                    <h1>Registro de familias</h1>
+                    <label for="">Nombre:</label>
+                    <input name="nombres"></input><br>
+                    <button id="btnNewCustomer" type="submit" class="pasarSiguiente">Agregar familia</button>
                 </form>
             </div>
-            <div class="details">
+            <div class="details" id="tablaFamilia">
                 <div class="recentOrders">
                     <table>
                         <thead>
                             <tr>
-                                <td>Item</td>
+                                <td>ID</td>
                                 <td>Nombre</td>
-                                <td>Cantidad</td>
-                                <td>Precio x unidad</td>
-                                <td>Subtotal</td>
-                                <td>Acciones</td>
                             </tr>
                         </thead>
                         <tbody>
                         <?php
-                            $sentencia = "SELECT id, fecha FROM ventas WHERE id = (SELECT MAX(id) FROM ventas);";
-                            $result = $mysqli->query($sentencia);
-                            foreach($result as $row){
-                                $idCompraGET = $row['id'];
-                            }
-                            $sql = "SELECT c.id, c.stock, c.precioUnitario, c.subTotal, d.nombre nombreProducto FROM detalleventas c INNER JOIN productos d ON c.idProducto_fk = d.id WHERE c.idVenta_fk = $idCompraGET;";
+                            $sql = "SELECT id, nombre FROM familias;";
                             $resultado = $mysqli->query($sql);
-                            $contador = 1;
                             $num = $resultado->num_rows;
     
                             if($num == 0){
                                 echo "<tr><td></td>";
-                                echo "<td></td>";
-                                echo "<td>Sin resultados</td>";
-                                echo "<td></td>";
-                                echo "<td></td></tr>";
+                                echo "<td>Sin resultados</td></tr>";
                             }
                             foreach($resultado as $row){
-                                $idDetalle = $row['id'];
                                 echo "<tr>";
-                                echo "<td>".$contador.".</td>";
-                                echo "<td>".$row['nombreProducto']."</td>";
-                                echo "<td>".$row['stock']."</td>";
-                                echo "<td>s/ ".$row['precioUnitario']."</td>";
-                                echo "<td>s/ ".$row['subTotal']."</td>";
-                                echo "<td><a class='a' href='deleteDetalles.php?idDetalle=".$idDetalle."'><ion-icon name='trash-outline'></ion-icon></a></td>";
-                                $contador++;
+                                echo "<td>".$row['id']."</td>";
+                                echo "<td>".$row['nombre']."</td>";
                             } echo "</tr>";
                         ?>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td>Item</td>
+                                <td>ID</td>
                                 <td>Nombre</td>
-                                <td>Cantidad</td>
-                                <td>Precio x unidad</td>
-                                <td>Subtotal</td>
-                                <td>Acciones</td>
                             </tr>
                         </tfoot>
                     </table>

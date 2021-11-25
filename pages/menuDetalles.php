@@ -115,7 +115,11 @@
                     </thead>
                     <tbody>
                         <?php
-                            $sql = "SELECT c.precioUnitario, c.stock, c.subTotal, d.nombre nombreProducto FROM detalleCompras c INNER JOIN productos d ON c.idProducto_fk = d.id WHERE c.idCompra_fk = $idVentaGET;";
+                            if($_SESSION['tipo'] == 0)
+                                $sql = "SELECT c.precioUnitario, c.stock, c.subTotal, d.nombre nombreProducto FROM detalleCompras c INNER JOIN productos d ON c.idProducto_fk = d.id WHERE c.idCompra_fk = $idVentaGET;";
+                            else
+                                $sql = "SELECT c.precioUnitario, c.stock, c.subTotal, d.nombre nombreProducto FROM detalleventas c INNER JOIN productos d ON c.idProducto_fk = d.id WHERE c.idVenta_fk = $idVentaGET;";
+
                             $resultado = $mysqli->query($sql);
                             $contador = 1;
                             foreach($resultado as $row){

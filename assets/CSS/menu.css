@@ -578,7 +578,11 @@ hr {
 }
 
 .contentClientes {
-    padding: 8em 0em;
+    padding: 10em 0em;
+}
+
+#tablaFamilia {
+    top: 0;
 }
 
 .contentClientes2 {
@@ -598,7 +602,7 @@ hr {
 
 .addShopping {
     padding-top: -5em;
-    width: 100%;
+    width: 85%;
     height: calc(100% - 5em);
     /* height: 100%; */
     flex-direction: row;
@@ -646,6 +650,12 @@ a#btnNewCustomer:hover {
     background-color: #1859c0;
 }
 
+.contentButton a {
+    position: absolute;
+    bottom: 15em;
+    z-index: 5;
+}
+
 .contentTelefonos {
     display: flex;
     flex-direction: row;
@@ -660,7 +670,8 @@ a#btnNewCustomer:hover {
     margin-left: 0;
 }
 
-.contentRed {
+.contentRed,
+.contentButtonsVenta {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -669,4 +680,27 @@ a#btnNewCustomer:hover {
 
 .contentRed select {
     width: 35%;
+}
+
+.contentButtonsVenta button#btnNewCustomer {
+    padding: 0 2em;
+}
+
+.contentButtonsVenta a#btnNewCustomer {
+    border: solid .12em var(--blue);
+    background-color: transparent;
+    color: var(--blue);
+    margin-left: 0;
+}
+
+.contentButtonsVenta a#btnNewCustomer:hover {
+    background-color: var(--blue);
+    color: white;
+}
+
+
+/* Configuraciones */
+
+form.formSettings label {
+    font-weight: 400;
 }

@@ -7,16 +7,16 @@
   if(!isset($_SESSION['id'])){
     $idCompra = $_SESSION['id'];
   }
-  $cliente = $_POST['selectCliente'];
+  $proveedor = $_POST['selectProveedor'];
   $metodoPago = $_POST['selectPago'];
   $objetoFecha = new DateTime();
   $fecha = $objetoFecha->format("Y-m-d h:i:s");
   $fecha = $fecha.".000000";
-  $sql = "INSERT INTO `compras` (`fecha`, `total`, `idVendedor_fk`, `idCliente_fk`, `metodoPago`) VALUES ('$fecha', 0, '$idCompra', $cliente, '$metodoPago');";
+  $sql = "INSERT INTO `compras` (`fecha`, `Total`, `idAdmin_fk`, `idProveedor_fk`, `metodoPago`) VALUES ('$fecha', 0, '$idCompra', $proveedor, '$metodoPago');";
   $resultado = $mysqli->query($sql);
 
   if($resultado){
-    header("Location: menu-ventas2.php");
+    header("Location: menu-compras2.php");
   }
   else{
     // header("Location: menu.php");

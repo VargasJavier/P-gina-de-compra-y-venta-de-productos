@@ -105,7 +105,7 @@
                         }
                     ?>
                     <form action="ventasInsert.php" method="post">
-                        <h1>Registrar compra</h1>
+                        <h1>Registrar venta</h1>
                         <label>Método de pago:</label>
                         <select required name="selectPago">
                             <option value="0">Seleccionar...</option>
@@ -123,7 +123,10 @@
                                 } 
                             ?>
                         </select><br>
-                        <button id="btnNewCustomer" type="submit" class="pasarSiguiente">Siguiente</button>
+                        <div class="contentButtonsVenta">
+                            <a id="btnNewCustomer" class="addCustomerButton" href="menu-clientes.php">Registrar cliente</a>
+                            <button id="btnNewCustomer" type="submit" class="pasarSiguiente">Siguiente</button>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -1,14 +1,12 @@
 <?php
-    require "conexion.php";
+    require 'conexion.php';
     session_start();
     if(!isset($_SESSION['nombre'])){
         header("Location: ../index.php");
     }
     $nombrePOST = $_SESSION['nombre'];
-    $contraseña = $_SESSION['password'];
     $nombreArray = explode(" ",$nombrePOST);
     $nombres = $nombreArray[0]." ".$nombreArray[1];
-    
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +35,7 @@
                 <hr>
             </li>
             <li>
-                <a class="home" href="menu.php">
+            <a class="home" href="menu.php">
                     <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
                     <span class="title">Home</span>
                 </a>
@@ -49,7 +47,7 @@
                     $arrayIcon = array("cart-outline","man-outline","dice-outline","lock-closed-outline");
                     $arrayHref = array("menu-compras.php","menu-clientes.php","menu-productos.php","menu-contraseña.php");
                     for($i = 0; $i < count($array); $i++){
-                        if($i == 3){
+                        if($i == 2){
                             echo '<li class="hovered">';
                             echo '<a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
                         }else echo '<li><a class="'.$arrayClass[$i].'" href="'.$arrayHref[$i].'">';
@@ -69,72 +67,71 @@
     <!-- Contenedor de contenedores -->
     <div class="contentContenedores main">
     <!-- main -->
-        <div class="topbar">
-            <div class="toggle">
-                <ion-icon name="menu"></ion-icon>
-            </div>
-            <!-- Search -->
-            <div class="search">
-                <a href="../index.php">Regresar</a>
-            </div>
-            <!-- userImg -->
-            <!-- <div class="user"> -->
-            <div>
-                <div class="contentAccess" style="display: flex; align-items: center; justify-content: space-between; width: 12em;">
-                <?php
-                    if(isset($_SESSION['nombre'])){
-                        echo '<ion-icon name="person-outline"></ion-icon>';
-                        echo "<span>".$nombres."</span>";
-                    }else{
-                        echo "chau";
-                    }
-                ?>
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu"></ion-icon>
+                </div>
+                <!-- Search -->
+                <div class="search">
+                    <a href="../index.php">Regresar</a>
+                </div>
+                <!-- userImg -->
+                <!-- <div class="user"> -->
+                <div>
+                    <div class="contentAccess" style="display: flex; align-items: center; justify-content: space-between; width: 12em;">
+                    <?php
+                        if(isset($_SESSION['nombre'])){
+                            echo '<ion-icon name="person-outline"></ion-icon>';
+                            echo "<span>".$nombres."</span>";
+                        }else{
+                            echo "chau";
+                        }
+                    ?>
+                    </div>
                 </div>
             </div>
-        </div>         
-        <div class="contentMain">
-            <div class="card">
-                <h2>Modificar contraseña</h2>
-                <?php
-                    if(isset($_REQUEST['botonPassword'])){
-                        $contraseñaPOST = $_POST['contraseñaActual'];
-                        if($contraseña == $contraseñaPOST){
-                            $contraseñaNueva = $_POST['nuevaContraseña'];
-                            $id = $_POST['select'];
-                            $sql = "UPDATE usuarios SET contraseña='".$contraseñaNueva."' WHERE id = '$id'";
-                            $resultado = $mysqli->query($sql);
-                            if($resultado){
-                                echo "Contraseña modificada";   
-                                $_SESSION['password'] = $contraseñaNueva;
+            <div class="contentClientes">
+                <div class=" card addCustomer">
+                    <?php
+                        if(isset($_POST['registrarProducto'])){
+                            if($_POST['select'] != 0){
+                                $nombreProducto = $_POST['txtNombre']; 
+                                $familiaProducto = $_POST['select']; 
+                                $binariosImagen = addslashes(file_get_contents($_FILES['foto']['tmp_name']));
+                                $tipoArchivo = $_FILES['foto']['type']; 
+                                $nombreArchivo = $_FILES['foto']['name'];
+                                $sql = "INSERT INTO `productos` (`nombre`, `cantidad`, `precio`,`imagen`, `tipoImagen`, `nombreImagen`, `idFamilia_fk`) VALUES ( '$nombreProducto',0,0,'$binariosImagen','$tipoArchivo','$nombreArchivo','$familiaProducto');";
+                                $resultado = $mysqli->query($sql);
+                                if($resultado)
+                                    echo "Registro exitoso";
+                                else
+                                    echo "Error en el registro";
                             }else{
-                                echo "No se pudo modificar. Intente nuevamente";
+                                echo "Error al registrar. Vuelve a intentarlo";
                             }
-                        }else{
-                            echo "Su contraseña actual no coincide. Vuelva a intentarlo 1".$contraseña." 2".$contraseñaPOST;
                         }
-                    }
-                ?>
-                <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
-                <br><select name="select">
-                        <?php
-                            $sql = "SELECT id, nombres FROM usuarios;";
-                            $resultado = $mysqli->query($sql);
-                            echo "<option value='0'>Seleccionar cuenta</option>";
-                            foreach($resultado as $row){
-                                echo "<option value='".$row['id']."'>".$row['nombres']."</option>";
-                            } 
-                        ?>
-                    </select><br>
-                    <input type="password" name="contraseñaActual" placeholder="Ingrese su contraseña actual"><br>
-                    <input type="password" name="nuevaContraseña" placeholder="Ingrese su nueva contraseña"><br>
-                    <div class="contentButtonsVenta">
-                        <a id="btnNewCustomer" class="addCustomerButton" href="menu-contraseña2.php">Registrar usuario</a>
-                        <button style="padding: 0 2em;" type="submit" name="botonPassword">Modificar</button>
-                    </div>
-                </form>
+                    ?>
+                    <form action="menu-productos.php" method="post" enctype="multipart/form-data">
+                        <label for="">Nombre:</label><br>
+                        <input type="text" name="txtNombre" id=""><br>
+                        <label for="">Imagen:</label>
+                        <input type="file" name="foto" id=""><br>
+                        <label for="">Familia:</label>
+                        <select name="select">
+                            <?php
+                                $sql = "SELECT id, nombre FROM familias;";
+                                $resultado = $mysqli->query($sql);
+                                echo "<option value='0'>Seleccionar familia</option>";
+                                foreach($resultado as $row){
+                                    echo "<option value='".$row['id']."'>".$row['nombre']."</option>";
+                                } 
+                            ?>
+                        </select><br>
+                        <button id="btnNewCustomer" name="registrarProducto" type="submit">Registrar</button>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
+  </div>
 </body>
 
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
